@@ -4,7 +4,9 @@ function Queue(name) {
     this.name = name;
 }
 
+
 Queue.prototype.mapper = function () {
+
 
     var myMap = new Map();
 

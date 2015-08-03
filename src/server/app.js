@@ -1,16 +1,23 @@
-var Queue = require('./proto/queue.js');
+//var Queue = require('./proto/priorityQueue.js');
 var Tasks = require('./proto/tasks.js');
 
-//import {Queue} from './proto/queue.js'
+//import {Queue} from './proto/priorityQueue.js'
+
+//var testQueue = new Queue('placeholder');
+
+//testQueue.mapper();
 
 /*
-var testQueue = new Queue('placeholder');
+var promise = new Promise(function (resolve, reject) {
 
-testQueue.mapper();
+
+});
 */
 
 var tasks = new Tasks();
-tasks.getTask(__dirname + '/tasks.json', function(data) {
+tasks.getTask(__dirname + '/inputTasks.json', function(data) {
     console.log(data);
 });
+
+
 
