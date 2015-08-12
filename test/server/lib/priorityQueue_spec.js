@@ -1,14 +1,24 @@
+var PriorityQueue = require('../../../src/server/lib/priorityQueue');
+var chai = require('chai');
 var expect = chai.expect,
     should = chai.should;
 
-describe('Priority queue', function () {
+describe('Priority queue ', function () {
+    var queue;
 
-    it('should pass dummy test', function () {
-        expect(1).to.equal(1);
-    })
+    beforeEach (function () {
+        queue = new PriorityQueue();
+    });
 
-    it('should not pass dummy test', function () {
-        expect(1).to.equal(2);
-    })
+    it('should increment length after item added', function () {
+        var task =   {
+            "name": "task1",
+            "priority": "2",
+            "executionTime": "1",
+            "period": "8"
+        };
+        queue.queue(task);
+        expect(queue.length()).to.equal(1);
+    });
 
 });
