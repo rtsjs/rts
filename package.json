@@ -1,0 +1,39 @@
+{
+  "name": "rts",
+  "version": "0.0.1",
+  "description": "Rts",
+  "main": "./src/server/app.js",
+  "directories": {
+    "test": "./test"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec  ./test/server/lib/priorityQueue_spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rtsjs/rts.git"
+  },
+  "keywords": [
+    "rts",
+    "rtsjs"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rtsjs/rts/issues"
+  },
+  "homepage": "https://github.com/rtsjs/rts#readme",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "gulp": "^3.9.0",
+    "gulp-nodemon": "^2.0.3",
+    "karma": "^0.13.8",
+    "karma-chai": "^0.1.0",
+    "karma-mocha": "^0.2.0",
+    "karma-phantomjs-launcher": "^0.2.1",
+    "mocha": "^2.2.5",
+    "phantomjs": "^1.9.17",
+    "sinon": "^1.15.4",
+    "sinon-chai": "^2.8.0"
+  }
+}
