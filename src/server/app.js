@@ -1,7 +1,7 @@
 //var Queue = require('./proto/priorityQueue.js');
 var Tasks = require('./proto/tasks.js');
 
-//import {Queue} from './proto/priorityQueue.js'
+//import {Queue} from './proto/priorityQueueMock.js'
 
 //var testQueue = new Queue('placeholder');
 

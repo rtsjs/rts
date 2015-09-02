@@ -1,4 +1,4 @@
-var PriorityQueue = require('../../../src/server/lib/priorityQueue');
+var PriorityQueue = require('../../../src/server/lib/priorityQueueMock');
 var chai = require('chai');
 var expect = chai.expect,
     should = chai.should;
