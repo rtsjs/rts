@@ -7,7 +7,7 @@
     "test": "./test"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec  ./test/server/lib/priorityQueue_spec.js"
+    "test": "./node_modules/.bin/mocha --reporter spec  ./test/server/lib/*.js"
   },
   "repository": {
     "type": "git",
