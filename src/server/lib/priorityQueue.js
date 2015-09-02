@@ -26,8 +26,8 @@ PriorityQ.prototype = {
         return first;
     },
 
-    peek: function(){
-        if (this.data.length >0){
+    peek: function () {
+        if (this.data.length > 0) {
             return this.data[0];
         }
         else return null;
@@ -44,10 +44,10 @@ PriorityQ.prototype = {
         while (n > 0) {
             // Compute the parent element's index, and fetch it.
             var parentN = Math.floor((n + 1) / 2) - 1,
-            parent = this.data[parentN];
+                parent = this.data[parentN];
             // If the parent has a lesser score, things are in order and we
             // are done.
-            if ( this.compare(element,parent))
+            if (this.compare(element, parent))
                 break;
 
             // Otherwise, swap the parent with the current element and
@@ -61,10 +61,10 @@ PriorityQ.prototype = {
     _sinkDown: function (n) {
         // Look up the target element and its score.
         var length = this.data.length,
-        element = this.data[n];
+            element = this.data[n];
         //elemScore = this.scoreFunction(element);
 
-        while(true) {
+        while (true) {
             // Compute the indices of the child elements.
             var child2N = (n + 1) * 2, child1N = child2N - 1;
             // This is used to store the new position of the element,
@@ -76,14 +76,14 @@ PriorityQ.prototype = {
                 var child1 = this.data[child1N];
                 //child1Score = this.scoreFunction(child1);
                 // If the score is less than our element's, we need to swap.
-                if (this.compare(element,child1))
+                if (this.compare(element, child1))
                     swap = child1N;
             }
             // Do the same checks for the other child.
             if (child2N < length) {
                 var child2 = this.data[child2N];
                 //child2Score = this.scoreFunction(child2);
-                if (this.compare((swap == null ? element : child1),child2))
+                if (this.compare((swap == null ? element : child1), child2))
                     swap = child2N;
             }
 

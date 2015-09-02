@@ -1,21 +1,28 @@
 {
+/*
+  - Assign a function to each task
+  - Task provider simulator
+  - Task consumer simulator
+    - pops task from PQ
+    - executes the function associated to the task
+
+  - UI: barchar time on x / task on Y (log or later Real time viewer)
+*/
+
   "sequenceName": "Sequence 1",
   "tasks" : [
     {
       "name": "task1",
-      "priority": "2",
       "executionTime": "1",
       "period": "8"
     },
     {
       "name": "task2",
-      "priority": "4",
       "executionTime": "2",
       "period": "5"
     },
     {
       "name": "task3",
-      "priority": "2",
       "executionTime": "2",
       "period": "10"
     }
