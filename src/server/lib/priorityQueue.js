@@ -10,15 +10,16 @@ function PriorityQueue(comparer) {
 
 PriorityQueue.prototype.queue = function (task) {
     _map.set(task, task);
-}
+};
 
 PriorityQueue.prototype.length = function () {
 
     return _map.size;
-}
+};
 
 PriorityQueue.prototype.peek = function () {
 
 
-}
+};
+
 
