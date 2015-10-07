@@ -2,4 +2,5 @@
 
 ## Hacking RTS algorithms in node
 ## Test
-### Waiting for Lucian priority queue
+## Updates
+### Priority queue available in browser
