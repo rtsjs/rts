@@ -7,7 +7,11 @@
     "test": "./test"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec  ./test/server/lib/*.js"
+    "test": "./node_modules/.bin/mocha --reporter spec  ./test/server/lib/*.js",
+    "postinstall": "npm run tsd",
+    "tsd": "tsd link --config src/tsd.json",
+    "tsc": "tsc -p src -w",
+    "start": "live-server --open=src"
   },
   "repository": {
     "type": "git",
@@ -31,9 +35,16 @@
     "karma-chai": "^0.1.0",
     "karma-mocha": "^0.2.0",
     "karma-phantomjs-launcher": "^0.2.1",
+    "live-server": "^0.8.1",
     "mocha": "^2.2.5",
     "phantomjs": "^1.9.17",
     "sinon": "^1.15.4",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "tsd": "^0.6.5",
+    "typescript": "^1.6.2"
+  },
+  "dependencies": {
+    "angular2": "2.0.0-alpha.39",
+    "systemjs": "0.19.4"
   }
 }
