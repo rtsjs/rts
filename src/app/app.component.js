@@ -13,18 +13,20 @@ var angular2_1 = require('angular2/angular2');
 var router_1 = require('angular2/router');
 var characters_component_1 = require('./components/character/characters.component');
 var dashboard_component_1 = require('./components/dashboard/dashboard.component');
+var priorityqueue_component_1 = require('./components/priorityqueue/priorityqueue.component');
 var AppComponent = (function () {
     function AppComponent() {
     }
     AppComponent = __decorate([
         angular2_1.Component({ selector: 'my-app' }),
         angular2_1.View({
-            template: "\n    <a [router-link]=\"['./Dashboard']\">Dashboard</a>\n    <a [router-link]=\"['./Characters']\">Characters</a>\n    <router-outlet></router-outlet>\n    ",
+            template: "\n    <a [router-link]=\"['./Dashboard']\">Dashboard</a>\n    <a [router-link]=\"['./Characters']\">Characters</a>\n    <a [router-link]=\"['./PriorityQueue']\">PriorityQueue</a>\n    <router-outlet></router-outlet>\n    ",
             directives: [router_1.ROUTER_DIRECTIVES]
         }),
         router_1.RouteConfig([
             { path: '/', as: 'Dashboard', component: dashboard_component_1.DashboardComponent },
-            { path: '/characters', as: 'Characters', component: characters_component_1.CharactersComponent }
+            { path: '/characters', as: 'Characters', component: characters_component_1.CharactersComponent },
+            { path: '/priorityqueue', as: 'PriorityQueue', component: priorityqueue_component_1.PriorityQueueComponent }
         ]), 
         __metadata('design:paramtypes', [])
     ], AppComponent);
