@@ -12,7 +12,7 @@ import {Component, FORM_DIRECTIVES, View} from 'angular2/angular2';
 	directives: [FORM_DIRECTIVES]
 })
 export class DashboardComponent {
-	public name = 'Janos';
+	public name = 'RTS team';
 	public message = '';
 
 	sayHello() {

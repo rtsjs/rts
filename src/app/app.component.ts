@@ -7,16 +7,16 @@ import {PriorityQueueComponent} from './components/priorityqueue/priorityqueue.c
 @Component({ selector: 'my-app' })
 @View({
   template: `
+    <a [router-link]="['./PriorityQueue']">PriorityQueue</a>
     <a [router-link]="['./Dashboard']">Dashboard</a>
     <a [router-link]="['./Characters']">Characters</a>
-    <a [router-link]="['./PriorityQueue']">PriorityQueue</a>
     <router-outlet></router-outlet>
     `,
   directives: [ROUTER_DIRECTIVES]
 })
 @RouteConfig([
-  { path: '/', as: 'Dashboard', component: DashboardComponent },
+  { path: '/', as: 'PriorityQueue', component: PriorityQueueComponent },
+  { path: '/dashboard', as: 'Dashboard', component: DashboardComponent },
   { path: '/characters', as: 'Characters', component: CharactersComponent },
-  { path: '/priorityqueue', as: 'PriorityQueue', component: PriorityQueueComponent }
 ])
 export class AppComponent { }

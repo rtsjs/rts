@@ -12,7 +12,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var angular2_1 = require('angular2/angular2');
 var DashboardComponent = (function () {
     function DashboardComponent() {
-        this.name = 'Janos';
+        this.name = 'RTS team';
         this.message = '';
     }
     DashboardComponent.prototype.sayHello = function () {

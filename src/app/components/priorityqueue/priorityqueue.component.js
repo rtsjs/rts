@@ -13,10 +13,7 @@ var angular2_1 = require('angular2/angular2');
 var priorityqueue_1 = require('./priorityqueue');
 var PriorityQueueComponent = (function () {
     function PriorityQueueComponent() {
-        /*
-            public name = 'Janos';
-            public message = '';
-        */
+        //results:Array<number>;
         this.data = [10, 9, 8908, 7, 4, 6, 4, 500, 4, 3, 2, 1];
         this._results = [];
         this.pq = new priorityqueue_1.PriorityQueue(function (a, b) {
@@ -29,6 +26,7 @@ var PriorityQueueComponent = (function () {
             //document.writeln(pq.peek());
             this._results.push(this.pq.pop());
         }
+        //this.results = this._results;
     }
     Object.defineProperty(PriorityQueueComponent.prototype, "results", {
         get: function () {
@@ -40,7 +38,7 @@ var PriorityQueueComponent = (function () {
     PriorityQueueComponent = __decorate([
         angular2_1.Component({ selector: 'my-priorityqueue' }),
         angular2_1.View({
-            template: "\n\t\t<h2>Priority Queue</h2>\n            {{1+1}}\n\t\t<span>{{results}}</span>\n        <ul >\n          <li *ng-for=\"#result of results\" \">\n          </li>\n        </ul>\n\t",
+            template: "\n\t\t<h2>Priority Queue</h2>\n        <ul >\n          <li *ng-for=\"#result of results\" >\n          {{result}}\n          </li>\n        </ul>\n\t",
             directives: [angular2_1.NgFor, angular2_1.NgIf],
         }), 
         __metadata('design:paramtypes', [])

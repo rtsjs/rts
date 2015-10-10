@@ -5,22 +5,20 @@ import {PriorityQueue} from './priorityqueue'
 @View({
     template: `
 		<h2>Priority Queue</h2>
-            {{1+1}}
-		<span>{{results}}</span>
         <ul >
-          <li *ng-for="#result of results" ">
+          <li *ng-for="#result of results" >
+          {{result}}
           </li>
         </ul>
 	`,
     directives: [NgFor, NgIf],
 })
 export class PriorityQueueComponent {
-/*
-    public name = 'Janos';
-    public message = '';
-*/
+    //results:Array<number>;
     private data:Array<number> = [10, 9, 8908, 7, 4, 6, 4, 500, 4, 3, 2, 1];
     private _results:Array<number> = [];
+
+
     private pq:PriorityQueue;
 
     constructor () {
@@ -36,15 +34,10 @@ export class PriorityQueueComponent {
             //document.writeln(pq.peek());
             this._results.push(this.pq.pop());
         }
+        //this.results = this._results;
     }
 
-    get results() {
+    public get results() {
         return this._results;
     }
-
-    /*
-        sayHello() {
-            this.message = 'Hello ' + this.name + '!';
-        }
-    */
 }

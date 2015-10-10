@@ -14,4 +14,5 @@
 ## Test
 ## Updates
 1. Priority queue available in browser
-2. Priority queue in typescript on surfaced with NG2
+2. Priority queue in typescript and is surfaced with NG2
+3. Fixed PriorityQueue NG2 binding
