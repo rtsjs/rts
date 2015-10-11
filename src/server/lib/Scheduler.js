@@ -31,5 +31,5 @@ Scheduler.prototype.Stop = function(){
     for (var intervalID in this._taskIntervals){
         clearInterval(intervalID);
     }
-    clearInterval(this._runInterval)
+    clearInterval(this._popInterval)
 }

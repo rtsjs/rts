@@ -21,7 +21,10 @@
     */
     var scheduler = new Scheduler();
     scheduler.AddPeriodicTask(
-        new TestTask(1000),2000
+        new TestTask(500),2000
     )
     scheduler.Run(1000)
+    setTimeout(function(){
+        scheduler.Stop();
+    },10000)
 }());
