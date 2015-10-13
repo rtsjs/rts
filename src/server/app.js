@@ -4,6 +4,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+var apiRouter = require("./api/router");
 var port = 3001;
 
 var environment = process.env.NODE_ENV;
@@ -18,12 +19,8 @@ console.log('About to crank up node');
 console.log('PORT=' + port);
 console.log('NODE_ENV=' + environment);
 
+app.use("/api", apiRouter);
 
-/*
-app.get("/", function(request, response) {
-    response.send("Hello World");
-});
-*/
 
 switch (environment){
     case 'build':
@@ -38,7 +35,6 @@ switch (environment){
         app.use('/*', express.static('./src/index.html'));
         break;
 }
-
 
 app.listen(port, function() {
     console.log('Express server listening on port ' + port);
