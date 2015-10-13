@@ -27,7 +27,7 @@ export class DashboardComponent {
 		let simulation = new Directory('Simulation', [], ['Scheduled', 'Processing', 'Processed']);
 		let status = new Directory('Status', [queue1, simulation], []);
 
-		let processed = new Directory('[Homepage] - C:\\ccu2.sld', [], ['Task1', 'Task2', 'Task3']);
+		let processed = new Directory('Homepage for processing', [], ['Task1', 'Task2', 'Task3']);
 		let history = new Directory('Processed', [processed], []);
 		this.directories = [status, history];
 

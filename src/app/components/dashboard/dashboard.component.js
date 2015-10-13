@@ -19,7 +19,7 @@ var DashboardComponent = (function () {
         var queue1 = new Directory_1.Directory('Queue1', [], ['4', '3', '1']);
         var simulation = new Directory_1.Directory('Simulation', [], ['Scheduled', 'Processing', 'Processed']);
         var status = new Directory_1.Directory('Status', [queue1, simulation], []);
-        var processed = new Directory_1.Directory('[Homepage] - C:\\ccu2.sld', [], ['Task1', 'Task2', 'Task3']);
+        var processed = new Directory_1.Directory('Homepage for processing', [], ['Task1', 'Task2', 'Task3']);
         var history = new Directory_1.Directory('Processed', [processed], []);
         this.directories = [status, history];
     }

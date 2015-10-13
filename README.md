@@ -11,8 +11,11 @@
 
 1. Open 2nd terminal and launch the app in the browser `npm start`
 
+1. Alternatively to previous step, run node ./src/server/app.js to try ExpressJS hosting
+
 ## Test
 ## Updates
 1. Priority queue available in browser
 2. Priority queue in typescript and is surfaced with NG2
 3. Fixed PriorityQueue NG2 binding
+4. Added ExpressJS hosting. 

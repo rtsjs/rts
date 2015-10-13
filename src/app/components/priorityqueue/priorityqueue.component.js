@@ -14,7 +14,7 @@ var priorityqueue_1 = require('./priorityqueue');
 var PriorityQueueComponent = (function () {
     function PriorityQueueComponent() {
         //results:Array<number>;
-        this.data = [10, 9, 8908, 7, 4, 6, 4, 500, 4, 3, 2, 1];
+        this.data = [10, 9, 8908, 7, 4, 6, 4, 500, 4, 3, 2, 1, 11];
         this._results = [];
         this.pq = new priorityqueue_1.PriorityQueue(function (a, b) {
             return a < b;
