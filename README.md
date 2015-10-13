@@ -11,7 +11,7 @@
 
 1. Open 2nd terminal and launch the app in the browser `npm start`
 
-1. Alternatively to previous step, run node ./src/server/app.js to try ExpressJS hosting
+1. Alternatively to previous step, run node ./src/server/app.js to try Express hosting
 
 ## Test
 ## Updates
