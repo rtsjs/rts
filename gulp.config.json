@@ -1,0 +1,19 @@
+{
+  "client": "./src/app/",
+  "server": "./src/server/",
+  "js": [
+    "src/client/app/**/*.module.js",
+    "src/client/app/**/*.js",
+    "!src/client/app/**/*.spec.js"
+  ],
+  "specs": [
+    "./src/client/app/**/*.spec.js"
+  ],
+  "alljs": [
+    "./src/client/app/**/*.js",
+    "./src/server/**/*.js"
+  ],
+  "build": "./build/",
+  "temp": "./.tmp/",
+  "report": "./report/"
+}

@@ -21,7 +21,6 @@ export class DashboardComponent {
 	public message = '';
 	directories:Array<Directory>;
 
-
 	constructor() {
 		let queue1 = new Directory('Queue1', [], ['4', '3', '1']);
 		let simulation = new Directory('Simulation', [], ['Scheduled', 'Processing', 'Processed']);
