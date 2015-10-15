@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var apiRouter = require("./api/router");
-var port = 3001;
+var port = process.env.PORT || 8001;
 
 var environment = process.env.NODE_ENV;
 

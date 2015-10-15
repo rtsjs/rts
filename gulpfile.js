@@ -6,12 +6,13 @@ var paths = require('./gulp.config.json');
 var reload = browserSync.reload;
 
 var log = plug.util.log;
-var port = process.env.PORT || 5001;
+var port = process.env.PORT || 8001;
 
 gulp.task('help', plug.taskListing);
 
 gulp.task('serve-dev', function(){
     log("serve-dev executing");
+    serve({mode: 'dev'});
 });
 
 
@@ -63,14 +64,20 @@ function serve(args) {
 }
 
 function startBrowserSync() {
+
+//TODO: fix missing env
+/*
+    log("startBrowserSync executing");
+    log(env);
     if (!env.sync || browserSync.active) {
         return;
     }
+*/
 
     log('Starting BrowserSync on port ' + port);
     browserSync({
         proxy: 'localhost:' + port,
-        port: 3000,
+        port: 5000,
         files: [paths.client + '/**/*.*'],
         ghostMode: { // these are the defaults t,f,t,t
             clicks: true,

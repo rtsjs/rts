@@ -11,7 +11,8 @@
     "postinstall": "npm run tsd",
     "tsd": "tsd link --config src/tsd.json",
     "tsc": "tsc -p src -w",
-    "start": "live-server --open=src"
+    "start": "live-server --open=src",
+    "nodestart": "node ./src/server/app.js"
   },
   "repository": {
     "type": "git",
