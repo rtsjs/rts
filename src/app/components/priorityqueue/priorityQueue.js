@@ -88,4 +88,5 @@ var PriorityQueue = (function () {
     return PriorityQueue;
 })();
 exports.PriorityQueue = PriorityQueue;
+
 //# sourceMappingURL=priorityqueue.js.map

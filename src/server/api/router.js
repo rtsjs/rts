@@ -4,7 +4,7 @@ var express = require('express');
 var api = express.Router();
 
 api.get("/test", function(request, response) {
-    response.send("Test api ");
+    response.send("Test api new change");
 });
 
 module.exports = api;

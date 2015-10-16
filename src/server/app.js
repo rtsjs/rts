@@ -10,7 +10,7 @@ var port = process.env.PORT || 8001;
 var environment = process.env.NODE_ENV;
 
 // Todo: Need a favorite icon
-// app.use(favicon(__dirname + '/favicon.ico'));
+//app.use(favicon(__dirname + '/favicon.ico'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(logger('dev'));

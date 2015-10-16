@@ -43,4 +43,5 @@ var CharactersComponent = (function () {
     return CharactersComponent;
 })();
 exports.CharactersComponent = CharactersComponent;
+
 //# sourceMappingURL=characters.component.js.map
