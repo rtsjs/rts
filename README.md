@@ -14,6 +14,8 @@
 
 1. Alternatively to previous step, run node ./src/server/app.js to try Express hosting
 
+1. To run build, node/express host, monitor `*.ts` in one step use: `gulp serve-dev`
+
 ## Test
 ## Updates
 1. Priority queue available in browser

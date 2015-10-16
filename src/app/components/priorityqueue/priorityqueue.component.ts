@@ -15,7 +15,7 @@ import {PriorityQueue} from './priorityqueue'
 })
 export class PriorityQueueComponent {
     //results:Array<number>;
-    private data:Array<number> = [ 21, 8908, 7, 4, 6, 4, 500, 4, 3, 2, 1, 11];
+    private data:Array<number> = [ 993, 8908, 7, 4, 6, 4, 500, 4, 3, 2, 1, 11];
     private _results:Array<number> = [];
 
 

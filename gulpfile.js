@@ -1,8 +1,12 @@
 var gulp = require('gulp');
 var browserSync = require('browser-sync');
+var tsc = require('gulp-typescript');
+var sourcemaps = require('gulp-sourcemaps');
+
 var plug = require('gulp-load-plugins')();
 
 var paths = require('./gulp.config.json');
+var tsProject = tsc.createProject('src/tsconfig.json');
 var reload = browserSync.reload;
 
 var log = plug.util.log;
@@ -10,7 +14,30 @@ var port = process.env.PORT || 8001;
 
 gulp.task('help', plug.taskListing);
 
-gulp.task('serve-dev', function(){
+
+/**
+ * Compile TypeScript and include references to library and app .d.ts files.
+ */
+
+gulp.task('watch', function() {
+    gulp.watch([paths.allTypeScript], ['compile-ts']);
+});
+
+gulp.task('compile-ts', function () {
+    var sourceTsFiles = ['./src/typings/tsd.d.ts', paths.allTypeScript];             //path to typescript file
+
+    var tsResult = gulp.src(sourceTsFiles)
+        .pipe(sourcemaps.init())
+        .pipe(tsc(tsProject));
+
+    //tsResult.dts.pipe(gulp.dest(config.tsOutputPath));
+    return tsResult.js
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('./src/app/'));
+        //.pipe(gulp.dest(config.tsOutputPath));
+});
+
+gulp.task('serve-dev', ['watch'], function(){
     log("serve-dev executing");
     serve({mode: 'dev'});
 });
@@ -33,6 +60,7 @@ function serve(args) {
         },
         watch: [paths.server]
     };
+
 
 /*
     var exec;

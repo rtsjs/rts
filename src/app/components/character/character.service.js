@@ -55,4 +55,5 @@ var CHARACTERS = [
         "name": "Elrond"
     }
 ];
+
 //# sourceMappingURL=character.service.js.map

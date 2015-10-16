@@ -7,4 +7,5 @@ angular2_1.bootstrap(app_component_1.AppComponent, [
     character_service_1.CharacterService,
     angular2_1.bind(router_1.LocationStrategy).toClass(router_1.HashLocationStrategy)
 ]);
+
 //# sourceMappingURL=bootstrap.js.map
