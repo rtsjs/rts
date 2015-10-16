@@ -8,12 +8,6 @@
 1. Run `npm install`
 1.1 Downgrade npm:  `npm install -g npm@3.3.4` . With 3.3.6 nodemon install fails.
 
-1. Run the TypeScript compiler and watch for changes `npm run tsc`
-
-1. Open 2nd terminal and launch the app in the browser `npm start`
-
-1. Alternatively to previous step, run node ./src/server/app.js to try Express hosting
-
 1. To run build, node/express host, monitor `*.ts` in one step use: `gulp serve-dev`
 
 ## Test
@@ -23,3 +17,4 @@
 3. Fixed PriorityQueue NG2 binding
 4. Added Express to serve static content. 
 5. Refactored API
+6. Added gulp/browsersync integration
