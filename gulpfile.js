@@ -69,10 +69,10 @@ function startBrowserSync() {
 /*
     log("startBrowserSync executing");
     log(env);
-    if (!env.sync || browserSync.active) {
+ */
+    if (browserSync.active) {
         return;
     }
-*/
 
     log('Starting BrowserSync on port ' + port);
     browserSync({
