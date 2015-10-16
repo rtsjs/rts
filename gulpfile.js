@@ -37,7 +37,7 @@ gulp.task('compile-ts', function () {
         //.pipe(gulp.dest(config.tsOutputPath));
 });
 
-gulp.task('serve-dev', ['watch'], function(){
+gulp.task('serve-dev', ['compile-ts', 'watch'], function(){
     log("serve-dev executing");
     serve({mode: 'dev'});
 });

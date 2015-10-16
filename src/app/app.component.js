@@ -21,14 +21,14 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         angular2_1.Component({ selector: 'my-app' }),
         angular2_1.View({
-            template: "\n    <a [router-link]=\"['./PriorityQueue']\">PriorityQueue</a>\n    <a [router-link]=\"['./Dashboard']\">Dashboard</a>\n    <a [router-link]=\"['./Characters']\">Characters</a>\n <a [router-link]=\"['./Chart']\">Chart</a>\n <router-outlet></router-outlet>\n    ",
+            template: "\n    <a [router-link]=\"['./PriorityQueue']\">PriorityQueue</a>\n    <a [router-link]=\"['./Dashboard']\">Dashboard</a>\n    <a [router-link]=\"['./Characters']\">Characters</a>\n    <a [router-link]=\"['./Chart']\">Chart</a>\n    <router-outlet></router-outlet>\n    ",
             directives: [router_1.ROUTER_DIRECTIVES]
         }),
         router_1.RouteConfig([
             { path: '/', as: 'PriorityQueue', component: priorityqueue_component_1.PriorityQueueComponent },
             { path: '/dashboard', as: 'Dashboard', component: dashboard_component_1.DashboardComponent },
             { path: '/characters', as: 'Characters', component: characters_component_1.CharactersComponent },
-            { path: '/chart', as: 'Chart', component: chart_component_1.ChartComponent }
+            { path: '/chart', as: 'Chart', component: chart_component_1.ChartComponent },
         ]), 
         __metadata('design:paramtypes', [])
     ], AppComponent);
