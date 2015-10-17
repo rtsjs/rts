@@ -1,9 +1,9 @@
 'use strict';
 var express = require('express');
-var api = express.Router();
-api.get("/test", function (req, res) {
-    res.send("Test api express change");
+var router = express.Router();
+router.get("/test", function (req, res) {
+    res.send("Test router express change");
 });
-module.exports = api;
+module.exports = router;
 
 //# sourceMappingURL=router.js.map

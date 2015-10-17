@@ -1,10 +1,10 @@
 'use strict';
 var express = require('express');
 
-var api = express.Router();
+var router = express.Router();
 
-api.get("/test", (req, res) => {
-    res.send("Test api express change");
+router.get("/test", (req:any, res:any) => {
+    res.send("Test router express change");
 });
 
-module.exports = api;
+export = router;

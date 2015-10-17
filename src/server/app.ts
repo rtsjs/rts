@@ -19,7 +19,7 @@ console.log('About to crank up node');
 console.log('PORT=' + port);
 console.log('NODE_ENV=' + environment);
 
-app.use("/api", apiRouter);
+app.use("/router", apiRouter);
 
 
 switch (environment){
