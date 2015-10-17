@@ -33,7 +33,7 @@ gulp.task('compile-ts', function () {
     //tsResult.dts.pipe(gulp.dest(config.tsOutputPath));
     return tsResult.js
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('./src/app/'));
+        .pipe(gulp.dest('./src/'));
         //.pipe(gulp.dest(config.tsOutputPath));
 });
 
