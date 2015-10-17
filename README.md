@@ -6,10 +6,10 @@
 1. Clone this repo
 
 1. Run `npm install`
-1.1 Downgrade npm:  `npm install -g npm@3.3.4` . With 3.3.6 nodemon install fails.
+1 Downgrade npm:  `npm install -g npm@3.3.4` . With 3.3.6 nodemon install fails.
 
 1. To run use: `gulp serve-dev`
-    1.1 builds, runs express host, monitors `*.ts` and syncs the browser
+1. builds, runs express host, monitors `*.ts` and syncs the browser
 
 ## Test
 ## Updates
