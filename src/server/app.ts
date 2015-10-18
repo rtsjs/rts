@@ -19,8 +19,10 @@ console.log('About to crank up node');
 console.log('PORT=' + port);
 console.log('NODE_ENV=' + environment);
 
-app.use("/router", apiRouter);
-
+app.use("/api", apiRouter);
+app.get('/api/bug', function(req, res) {
+    res.send('hello bug');
+});
 
 switch (environment){
     case 'build':
