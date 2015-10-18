@@ -24,6 +24,7 @@ app.get('/api/bug', function(req, res) {
     res.send('hello bug');
 });
 
+
 switch (environment){
     case 'build':
         console.log('** BUILD **');
