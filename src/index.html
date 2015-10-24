@@ -6,11 +6,21 @@
     <script src="../node_modules/systemjs/dist/system.src.js"></script>
     <script src="../node_modules/angular2/bundles/angular2.dev.js"></script>
     <script src="../node_modules/angular2/bundles/router.dev.js"></script>
+
+    <!-- include ag-Grid javascript file -->
+    <script src="../node_modules/ag-grid/dist/ag-grid.js"></script>
+    <!-- include stylesheets for the grid -->
+    <link rel="stylesheet" type="text/css" href="../node_modules/ag-grid/dist/ag-grid.css">
+    <link rel="stylesheet" type="text/css" href="../node_modules/ag-grid/dist/theme-fresh.css">
     <script>
         System.config({
             packages: {'app': {defaultExtension: 'js'}}
         });
-        System.import('app/bootstrap').catch(console.log.bind(console));
+        System.import("angular2/angular2").then(function(ng2) {
+            ag.grid.initialiseAgGridWithAngular2(ng2);
+        });
+        System.import('app/bootstrap')
+                .catch(console.log.bind(console));
     </script>
 </head>
 

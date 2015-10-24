@@ -54,6 +54,7 @@
     "typescript": "^1.6.2"
   },
   "dependencies": {
+    "ag-grid": "^2.3.3",
     "angular2": "2.0.0-alpha.39",
     "body-parser": "^1.14.1",
     "express": "^4.13.3",

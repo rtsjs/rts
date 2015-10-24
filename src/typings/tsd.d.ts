@@ -12,3 +12,4 @@
 /// <reference path="serve-static/serve-static.d.ts" />
 /// <reference path="morgan/morgan.d.ts" />
 /// <reference path="serve-favicon/serve-favicon.d.ts" />
+/// <reference path="../../node_modules/ag-grid/dist/ag-grid.d.ts"/>
