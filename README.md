@@ -8,10 +8,9 @@
 1. Run `npm install`
 1 Downgrade npm:  `npm install -g npm@3.3.4` . With 3.3.6 nodemon install fails.
 1. Configure tsd and dependencies:
-*   `npm install tsd -g`
-*   `cd  src`
-*   `tsd install`
-
+    *   `npm install tsd -g`
+    *   `cd  src`
+    *   `tsd install`
 1. To run use: `gulp serve-dev`
 1. builds, runs express host, monitors `*.ts` and syncs the browser
 
