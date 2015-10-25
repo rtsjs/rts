@@ -13,8 +13,13 @@
     },
     {
       "name": "task3",
-      "executionTime": "2",
+      "executionTime": "3",
       "period": "10"
+    },
+    {
+      "name": "task4",
+      "executionTime": "4",
+      "period": "21"
     }
   ]
 }
