@@ -1,0 +1,20 @@
+ {
+  "sequenceName": "Sequence 1",
+  "tasks" : [
+    {
+      "name": "task1",
+      "executionTime": "1",
+      "period": "8"
+    },
+    {
+      "name": "task2",
+      "executionTime": "2",
+      "period": "5"
+    },
+    {
+      "name": "task3",
+      "executionTime": "2",
+      "period": "10"
+    }
+  ]
+}

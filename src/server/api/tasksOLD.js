@@ -1,5 +1,6 @@
 "use strict";
 var fs = require('fs');
+
 module.exports = Tasks;
 
 function Tasks() {
