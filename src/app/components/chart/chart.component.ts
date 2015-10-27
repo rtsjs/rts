@@ -51,8 +51,9 @@ export class ChartComponent {
         this.refreshGrid();
 */
     }
-    getGridData(){
-        this._http.get("http://localhost:5000/api/task")
+
+    getGridData() {
+        this._http.get("/api/task")
             .map(res => res.json())
             .subscribe(seq =>  this.rowData = seq.tasks);
     }
