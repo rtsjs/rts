@@ -8,10 +8,8 @@ router.get("/test", function (req, res) {
 router.get("/task", function (req, res) {
     var tasks = new Tasks.Tasks();
     tasks.getTasks(__dirname + '/inputTasks.json', function (data) {
-        //res.sendStatus(503);
         res.send(data);
     });
-    //res.send(result );
 });
 router.get("/task/:id", function (req, res) {
     res.send("Sending task " + req.params.id);

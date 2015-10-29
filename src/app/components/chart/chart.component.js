@@ -94,7 +94,7 @@ var ChartComponent = (function () {
     };
     ChartComponent.prototype.getGridData = function () {
         var _this = this;
-        this._http.get("http://localhost:5000/api/task")
+        this._http.get("/api/task")
             .map(function (res) { return res.json(); })
             .subscribe(function (seq) { return _this.rowData = seq.tasks; });
     };
