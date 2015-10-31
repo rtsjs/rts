@@ -6,7 +6,8 @@
 1. Clone this repo
 
 1. Run `npm install`
-1 Downgrade npm:  `npm install -g npm@3.3.4` . With 3.3.6 nodemon install fails.
+1. Downgrade npm:  `npm install -g npm@3.3.4` . With 3.3.6 nodemon install fails.
+1. Install gulp: `npm install gulp -g`
 1. Configure tsd and dependencies:
     *   `npm install tsd -g`
     *   `cd  src`
