@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Inverted Pendulum</title>
+    <link rel="stylesheet" href="simulation.css" type="text/css" />
+    <script src="simulation.js"></script>
+</head>
+<body>
+    <h1>Inverted Pendulum Simulation</h1>
+    <svg width="400" height="400">
+        <g transform="translate(200,200) scale(1,-1) ">
+            <line x1="0" y1="-200" x2="0" y2="200" style="stroke:rgb(192, 192, 192);stroke-width:1px;fill-opacity:0.1"/>
+            <line x1="-200" y1="0" x2="200" y2="0" style="stroke:rgb(192, 192, 192);stroke-width:1px;fill-opacity:0.1"/>
+            <g id="x" transform="translate(0)">
+                <rect x="-20" y="-10" width="40" height="20" style="fill:white;stroke:black;stroke-width:1px;fill-opacity:0.1;stroke-opacity:1" />                
+                <g id="theta" transform="rotate(90)">
+                    <line x1="0" y1="0" x2="100" y2="0" style="stroke:rgb(128,128,256);stroke-width:4" shape-rendering="auto" />
+                </g>
+            </g>
+        </g>
+        Sorry, your browser does not support inline SVG.
+    </svg>
+    <div id="content">
+        <span>Theta=</span>
+        <span id="thetaValue">90</span>
+        <span>:x=</span>
+        <span id="xValue">0</span>
+    </div>
+</body>
+</html>
