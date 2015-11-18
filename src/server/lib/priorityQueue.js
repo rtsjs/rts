@@ -4,7 +4,7 @@ function PriorityQ(compare) {
     this.compare = compare;
 }
 // interface goes into the prototype
-PriorityQ.prototype = {
+PriorityQ.prototype.push = {
     push: function (element) {
         // Add the new element to the end of the array.
         this.data.push(element);
