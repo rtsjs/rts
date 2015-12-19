@@ -15,7 +15,6 @@ router.get("/task", (req:any, res:any) => {
     tasks.getTasks(__dirname + '/inputTasks.json', function(data) {
         res.send(data);
     });
-
 });
 
 router.get("/task/:id", (req:any, res:any) => {
@@ -26,14 +25,21 @@ router.get("/task/:id", (req:any, res:any) => {
 router.post("/addTask", (req:any, res:any) => {
     var tasks = new Tasks.Tasks();
     tasks.addTask(__dirname + '/inputTasks.json', req.body, function(data){
-        res.send(data);
+        res.sendStatus(200);
+    });
+});
+
+router.post("/updateTask", (req:any, res:any) => {
+    var tasks = new Tasks.Tasks();
+    tasks.updateTask(__dirname + '/inputTasks.json', req.body, function(data){
+        res.sendStatus(200);
     });
 });
 
 router.post("/deleteTask", (req:any, res:any) => {
     var tasks = new Tasks.Tasks();
     tasks.deleteTask(__dirname + '/inputTasks.json', req.body, function(data){
-        res.send(data);
+        res.sendStatus(200);
     });
 });
 

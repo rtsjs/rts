@@ -14,6 +14,7 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
         </ag-grid-ng2>
         <br/>
         <button type="button" (click)="getGridData()">Refresh Grid</button>
+        <button type="button" (click)="testAddTask()">Add</button>
 	`,
 
     directives: [ ag.grid.AgGridNg2, NgFor, NgIf],
@@ -55,6 +56,10 @@ export class ChartComponent {
         this._http.get("/api/task")
             .map(res => res.json())
             .subscribe(seq =>  this.rowData = seq.tasks);
+    }
+
+    testAddTask(){
+       this.addTask("Name", "22", "33");
     }
 
     addTask(name:string, period:string, executionTime:string){
