@@ -59,7 +59,11 @@ export class ChartComponent {
     }
 
     testAddTask(){
-       this.addTask("Name", "22", "33");
+        var taskName = Math.floor((Math.random() * 10000) + 1);
+        var period = Math.floor((Math.random() * 100) + 1);
+        var executionTime = Math.floor((Math.random() * 100) + 1);
+
+        this.addTask(taskName, period, executionTime);
     }
 
     addTask(name:string, period:string, executionTime:string){

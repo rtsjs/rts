@@ -39,7 +39,7 @@ export class Tasks {
                 return cb("error: task exists");
             }
             json["tasks"].push(task);
-            fs.writeFile(path, JSON.stringify(json), function (err) {
+            fs.writeFile(path, JSON.stringify(json, null, 4), function (err) {
                 if(err){
                     return cb(err);
                 }
