@@ -23,4 +23,18 @@ router.get("/task/:id", (req:any, res:any) => {
 });
 
 
+router.post("/addTask", (req:any, res:any) => {
+    var tasks = new Tasks.Tasks();
+    tasks.addTask(__dirname + '/inputTasks.json', req.body, function(data){
+        res.send(data);
+    });
+});
+
+router.post("/deleteTask", (req:any, res:any) => {
+    var tasks = new Tasks.Tasks();
+    tasks.deleteTask(__dirname + '/inputTasks.json', req.body, function(data){
+        res.send(data);
+    });
+});
+
 export = router;

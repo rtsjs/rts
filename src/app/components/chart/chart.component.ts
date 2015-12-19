@@ -1,7 +1,6 @@
 import {Component, NgFor, NgIf, View} from 'angular2/angular2';
 import {Router} from 'angular2/router';
-import {Http,  HTTP_BINDINGS} from 'angular2/http';
-
+import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
 
 //import {ag.grid.AgGridNg2} from 'ag-grid/dist/ag-grid';
 
@@ -11,10 +10,10 @@ import {Http,  HTTP_BINDINGS} from 'angular2/http';
     template: `
 		<h3>AG Grid</h3>
 		<ag-grid-ng2 id="cars" class="ag-fresh"  style="height: 500px;"
-        [column-defs]="columnDefs" [row-data]="rowData">
-      </ag-grid-ng2>
-      <br/>
-<button type="button" (click)="getGridData()">Refresh Grid</button>
+            [column-defs]="columnDefs" [row-data]="rowData">
+        </ag-grid-ng2>
+        <br/>
+        <button type="button" (click)="getGridData()">Refresh Grid</button>
 	`,
 
     directives: [ ag.grid.AgGridNg2, NgFor, NgIf],
@@ -58,5 +57,32 @@ export class ChartComponent {
             .subscribe(seq =>  this.rowData = seq.tasks);
     }
 
+    addTask(name:string, period:string, executionTime:string){
+        if (name.length == 0 || period.length == 0 || executionTime.length == 0){
+            console.log("invalid input");
+            return;
+        }
+
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+
+        this._http.post("/api/addTask", JSON.stringify({name:name,period:period,executionTime:executionTime}),{headers:headers})
+            .map(res => res.json())
+            .subscribe(seq =>  this.rowData = seq.tasks);
+    }
+
+    deleteTask(name:string){
+        if (name.length == 0){
+            console.log("invalid input");
+            return;
+        }
+
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+
+        this._http.post("/api/deleteTask", JSON.stringify({name:name}),{headers:headers})
+            .map(res => res.json())
+            .subscribe(seq =>  this.rowData = seq.tasks);
+    }
 }
 
