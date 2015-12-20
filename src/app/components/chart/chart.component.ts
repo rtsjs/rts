@@ -8,31 +8,68 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
 
 @View({
     template: `
-		<h3>AG Grid</h3>
-		<ag-grid-ng2 id="cars" class="ag-fresh"  style="height: 500px;"
-            [column-defs]="columnDefs" [row-data]="rowData">
-        </ag-grid-ng2>
-        <br/>
-        <button type="button" (click)="getGridData()">Refresh Grid</button>
-        <button type="button" (click)="testAddTask()">Add</button>
+        <table>
+            <tr>
+                <td align="right" vertical-align="middle">
+                    <button (click)="addNewTask()">
+                        <img vertical-align="middle" src="/resources/images/plus.svg" width="12" height="12"/>
+                    </button>
+                    <button (click)="getGridData()">
+                        <img vertical-align="middle" src="/resources/images/loop-circular.svg" width="12" height="12"/>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ag-grid-ng2 id="tasks" class="ag-fresh"  style="height: 500px;"
+                        [column-defs]="columnDefs"
+                        [row-data]="rowData"
+                        [grid-options]="gridOptions"
+                        [enable-col-resize]="true"
+                        [enable-sorting]="true"
+                        [row-selection]="none"
+                        row-height="35">
+                    </ag-grid-ng2>
+                </td>
+            </tr>
+        </table>
 	`,
 
     directives: [ ag.grid.AgGridNg2, NgFor, NgIf],
 })
 export class ChartComponent {
     public columnDefs:Array<any>;
+    public gridOptions:any;
     public rowData:Array<any>;
     private _http:Http;
     private sequence:any;
+    private selectedTaskName:string;
+    private rowCount:any;
 
 
     constructor(public http:Http){
 
+        this.gridOptions = {
+            pinnedColumnCount: 0,
+            rowSelection: 'single',
+            onRowSelected: this.rowSelectedFunc,
+            onRowDeselected: this.rowDeselectedFunc,
+            onSelectionChanged: this.selectionChangedFunc,
+            onModelUpdated: this.modelUpdatedFunc,
+            onReady: this.readyFunc,
+            onCellClicked: this.cellClickedFunc,
+            enableColResize: true,
+            suppressCellSelection: true
+            //singleClickEdit: true
+        };
+
         // put columnDefs directly onto the controller
         this.columnDefs = [
-            {headerName: "Name", field: "name"},
-            {headerName: "Period", field: "period"},
-            {headerName: "Time", field: "executionTime"}
+            //{headerName: "...", width: 30, checkboxSelection: true, suppressSorting: true, suppressMenu: true, suppressSizeToFit: true },
+            {headerName: "Name", field: "name", editable: true, padding: 10, headerTooltip:"Task name"},
+            {headerName: "Period", field: "period", editable:true, padding: 10,  headerTooltip:"Task period"},
+            {headerName: "Time", field: "executionTime", editable:true, padding: 10,  headerTooltip:"Task execution time"},
+            {headerName: "...", width: 40, padding: 10, suppressSorting: true, suppressMenu: true, suppressSizeToFit: false, editable:false, cellRenderer: this.deleteTaskRendererFunc}
         ];
 
 /*
@@ -52,13 +89,50 @@ export class ChartComponent {
 */
     }
 
+    cellClickedFunc(event) {
+        console.log("cell clicked");
+    }
+
+
+    modelUpdatedFunc(event){
+        console.log("model updated");
+        ChartComponent.prototype.calculateRowCount();
+    }
+
+    readyFunc(event){
+        console.log("ready");
+        ChartComponent.prototype.calculateRowCount();
+    }
+
+    rowDeselectedFunc(event) {
+        this.selectedTaskName = "";
+        console.log("row " + event.node.data.name + " de-selected");
+    }
+
+    rowSelectedFunc(event) {
+        this.selectedTaskName = event.node.data.name;
+        console.log("row " + event.node.data.name + " selected");
+    }
+
+    selectionChangedFunc(event) {
+        console.log("selection changed, " + event.selectedRows.length + " rows selected");
+    }
+
+    deleteTaskRendererFunc(){
+        console.log("delete task handler");
+        return '<button width="16" height="16" align="middle" (click)="deleteTask()">' +
+                    '<img src="/resources/images/trash.png" width="12" height="12"/>' +
+                '</button>';
+    }
+
     getGridData() {
         this._http.get("/api/task")
             .map(res => res.json())
             .subscribe(seq =>  this.rowData = seq.tasks);
     }
 
-    testAddTask(){
+    addNewTask(){
+        this.gridOptions.api.deselectAll();
         var taskName = Math.floor((Math.random() * 10000) + 1);
         var period = Math.floor((Math.random() * 100) + 1);
         var executionTime = Math.floor((Math.random() * 100) + 1);
@@ -78,20 +152,39 @@ export class ChartComponent {
         this._http.post("/api/addTask", JSON.stringify({name:name,period:period,executionTime:executionTime}),{headers:headers})
             .map(res => res.json())
             .subscribe(seq =>  this.rowData = seq.tasks);
+
+        //this.gridOptions.api.selectIndex(0,false,false);
     }
 
-    deleteTask(name:string){
-        if (name.length == 0){
-            console.log("invalid input");
+    deleteTask(){
+        console.log("delete task");
+        if (this.selectedTaskName == ""){
+            console.log("select a task");
             return;
         }
 
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-        this._http.post("/api/deleteTask", JSON.stringify({name:name}),{headers:headers})
+        this._http.post("/api/deleteTask", JSON.stringify({name:this.selectedTaskName}),{headers:headers})
             .map(res => res.json())
-            .subscribe(seq =>  this.rowData = seq.tasks);
+            .subscribe((seq) =>
+            {
+                this.rowData = seq.tasks;
+            });
     }
+};
+
+ChartComponent.prototype.calculateRowCount = function(){
+    console.log("calculateRowCount");
+    //if (this.gridOptions && this.gridOptions.api && this.rowData) {
+    //    console.log("calculateRowCount2");
+    //    var model = this.gridOptions.api.getModel();
+    //    var totalRows = this.rowData.length;
+    //    var processedRows = model.getVirtualRowCount();
+    //    //this.rowCount = processedRows.toLocaleString() + ' / ' + totalRows.toLocaleString();
+    //
+    //  }
 }
+
 

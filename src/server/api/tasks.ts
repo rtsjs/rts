@@ -90,11 +90,11 @@ export class Tasks {
         });
     }
     private static contains(data:any, name:string) {
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].name == name) {
+        data.forEach( (item) =>{
+            if (item.name == name) {
                 return true;
             }
-        }
+        });
 
         return false;
     }
