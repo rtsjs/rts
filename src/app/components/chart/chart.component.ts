@@ -12,10 +12,10 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
             <tr>
                 <td align="right" vertical-align="middle">
                     <button (click)="addNewTask()">
-                        <img vertical-align="middle" src="/resources/images/plus.svg" width="12" height="12"/>
+                        <img src="/resources/images/plus.svg" width="12" height="12"/>
                     </button>
                     <button (click)="getGridData()">
-                        <img vertical-align="middle" src="/resources/images/loop-circular.svg" width="12" height="12"/>
+                        <img src="/resources/images/loop-circular.svg" width="12" height="12"/>
                     </button>
                 </td>
             </tr>
@@ -53,12 +53,14 @@ export class ChartComponent {
             pinnedColumnCount: 0,
             rowSelection: 'single',
             onRowSelected: this.rowSelectedFunc,
+            onCellValueChanged: this.cellValueChangedFunc,
             onRowDeselected: this.rowDeselectedFunc,
             onSelectionChanged: this.selectionChangedFunc,
             onModelUpdated: this.modelUpdatedFunc,
             onReady: this.readyFunc,
             onCellClicked: this.cellClickedFunc,
             enableColResize: true,
+            sizeToFit: true,
             suppressCellSelection: true
             //singleClickEdit: true
         };
@@ -66,10 +68,10 @@ export class ChartComponent {
         // put columnDefs directly onto the controller
         this.columnDefs = [
             //{headerName: "...", width: 30, checkboxSelection: true, suppressSorting: true, suppressMenu: true, suppressSizeToFit: true },
-            {headerName: "Name", field: "name", editable: true, padding: 10, headerTooltip:"Task name"},
-            {headerName: "Period", field: "period", editable:true, padding: 10,  headerTooltip:"Task period"},
-            {headerName: "Time", field: "executionTime", editable:true, padding: 10,  headerTooltip:"Task execution time"},
-            {headerName: "...", width: 40, padding: 10, suppressSorting: true, suppressMenu: true, suppressSizeToFit: false, editable:false, cellRenderer: this.deleteTaskRendererFunc}
+            {headerName: "Name", field: "name", editable: true, padding: 10, headerTooltip:"Task name", cellStyle: {color: '#000000'}},
+            {headerName: "Period", field: "period", editable:true, padding: 10,  headerTooltip:"Task period", cellStyle: {color: '#000000'}},
+            {headerName: "Time", field: "executionTime", editable:true, padding: 10,  headerTooltip:"Task execution time", cellStyle: {color: '#000000'}},
+            {headerName: "...", width: 50, suppressSorting: true, suppressMenu: true, suppressSizeToFit: false, editable:false, cellRenderer: this.deleteTaskRendererFunc},
         ];
 
 /*
@@ -87,6 +89,10 @@ export class ChartComponent {
         this.getGridData()
         this.refreshGrid();
 */
+    }
+
+    cellValueChangedFunc(event){
+        console.log("cell value changed");
     }
 
     cellClickedFunc(event) {
@@ -120,7 +126,7 @@ export class ChartComponent {
 
     deleteTaskRendererFunc(){
         console.log("delete task handler");
-        return '<button width="16" height="16" align="middle" (click)="deleteTask()">' +
+        return '<button width="14" height="14" align="middle" (click)="this.deleteTask()">' +
                     '<img src="/resources/images/trash.png" width="12" height="12"/>' +
                 '</button>';
     }
@@ -157,6 +163,7 @@ export class ChartComponent {
     }
 
     deleteTask(){
+        alert("inside delete task");
         console.log("delete task");
         if (this.selectedTaskName == ""){
             console.log("select a task");
