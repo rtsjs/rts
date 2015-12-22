@@ -9,13 +9,14 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
 @View({
     template: `
         <table>
+            <tr><h3>AG Grid</h3></tr>
             <tr>
                 <td align="right" vertical-align="middle">
                     <button (click)="addNewTask()">
-                        <img src="/resources/images/plus.svg" width="12" height="12"/>
+                        <img src="../../resources/images/plus.svg" width="12" height="12"/>
                     </button>
                     <button (click)="getGridData()">
-                        <img src="/resources/images/loop-circular.svg" width="12" height="12"/>
+                        <img src="../../resources/images/loop-circular.svg" width="12" height="12"/>
                     </button>
                 </td>
             </tr>
@@ -44,8 +45,6 @@ export class ChartComponent {
     private _http:Http;
     private sequence:any;
     private selectedTaskName:string;
-    private rowCount:any;
-
 
     constructor(public http:Http){
 
@@ -71,24 +70,24 @@ export class ChartComponent {
             {headerName: "Name", field: "name", editable: true, padding: 10, headerTooltip:"Task name", cellStyle: {color: '#000000'}},
             {headerName: "Period", field: "period", editable:true, padding: 10,  headerTooltip:"Task period", cellStyle: {color: '#000000'}},
             {headerName: "Time", field: "executionTime", editable:true, padding: 10,  headerTooltip:"Task execution time", cellStyle: {color: '#000000'}},
-            {headerName: "...", width: 50, suppressSorting: true, suppressMenu: true, suppressSizeToFit: false, editable:false, cellRenderer: this.deleteTaskRendererFunc},
+            {headerName: "...", width: 50, suppressSorting: true, suppressMenu: true, suppressSizeToFit: false, editable:false, cellRenderer: this.deleteTaskRendererFunc}
         ];
 
-/*
-        this.rowData = [
-            {name: "T1", period: "1", executionTime: 12},
-            {name: "T2", period: "2", executionTime: 13},
-            {name: "T3", period: "3", executionTime: 14}
-        ];
-*/
+        /*
+         this.rowData = [
+         {name: "T1", period: "1", executionTime: 12},
+         {name: "T2", period: "2", executionTime: 13},
+         {name: "T3", period: "3", executionTime: 14}
+         ];
+         */
 
         // put data directly onto the controller
         this._http = http;
         this.getGridData();
-/*
-        this.getGridData()
-        this.refreshGrid();
-*/
+        /*
+         this.getGridData()
+         this.refreshGrid();
+         */
     }
 
     cellValueChangedFunc(event){
@@ -102,12 +101,10 @@ export class ChartComponent {
 
     modelUpdatedFunc(event){
         console.log("model updated");
-        ChartComponent.prototype.calculateRowCount();
     }
 
     readyFunc(event){
         console.log("ready");
-        ChartComponent.prototype.calculateRowCount();
     }
 
     rowDeselectedFunc(event) {
@@ -127,18 +124,17 @@ export class ChartComponent {
     deleteTaskRendererFunc(){
         console.log("delete task handler");
         return '<button width="14" height="14" align="middle" (click)="this.deleteTask()">' +
-                    '<img src="/resources/images/trash.png" width="12" height="12"/>' +
+                    '<img src="../../resources/images/trash.png" width="12" height="12"/>' +
                 '</button>';
     }
 
     getGridData() {
-        this._http.get("/api/task")
-            .map(res => res.json())
-            .subscribe(seq =>  this.rowData = seq.tasks);
+                    this._http.get("/api/task")
+                    .map(res => res.json())
+                    .subscribe(seq =>  this.rowData = seq.tasks);
     }
 
     addNewTask(){
-        this.gridOptions.api.deselectAll();
         var taskName = Math.floor((Math.random() * 10000) + 1);
         var period = Math.floor((Math.random() * 100) + 1);
         var executionTime = Math.floor((Math.random() * 100) + 1);
@@ -181,17 +177,5 @@ export class ChartComponent {
             });
     }
 };
-
-ChartComponent.prototype.calculateRowCount = function(){
-    console.log("calculateRowCount");
-    //if (this.gridOptions && this.gridOptions.api && this.rowData) {
-    //    console.log("calculateRowCount2");
-    //    var model = this.gridOptions.api.getModel();
-    //    var totalRows = this.rowData.length;
-    //    var processedRows = model.getVirtualRowCount();
-    //    //this.rowCount = processedRows.toLocaleString() + ' / ' + totalRows.toLocaleString();
-    //
-    //  }
-}
 
 
