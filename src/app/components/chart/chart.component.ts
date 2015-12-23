@@ -38,13 +38,14 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
 
     directives: [ ag.grid.AgGridNg2, NgFor, NgIf],
 })
+
 export class ChartComponent {
     public columnDefs:Array<any>;
     public gridOptions:any;
     public rowData:Array<any>;
+    public SelectedTask:any;
     private _http:Http;
     private sequence:any;
-    private selectedTaskName:string;
 
     constructor(public http:Http){
 
@@ -67,7 +68,7 @@ export class ChartComponent {
         // put columnDefs directly onto the controller
         this.columnDefs = [
             //{headerName: "...", width: 30, checkboxSelection: true, suppressSorting: true, suppressMenu: true, suppressSizeToFit: true },
-            {headerName: "Name", field: "name", editable: true, padding: 10, headerTooltip:"Task name", cellStyle: {color: '#000000'}},
+            {headerName: "Name", field: "name", padding: 10, headerTooltip:"Task name", cellStyle: {color: '#000000'}},
             {headerName: "Period", field: "period", editable:true, padding: 10,  headerTooltip:"Task period", cellStyle: {color: '#000000'}},
             {headerName: "Time", field: "executionTime", editable:true, padding: 10,  headerTooltip:"Task execution time", cellStyle: {color: '#000000'}},
             {headerName: "...", width: 50, suppressSorting: true, suppressMenu: true, suppressSizeToFit: false, editable:false, cellRenderer: this.deleteTaskRendererFunc}
@@ -90,38 +91,44 @@ export class ChartComponent {
          */
     }
 
-    cellValueChangedFunc(event){
-        console.log("cell value changed");
+    cellValueChangedFunc = (event)=> {
+        if (event.newValue == event.oldValue){
+            return;
+        }
+
+        this.updateTask();
     }
 
-    cellClickedFunc(event) {
-        console.log("cell clicked");
+    cellClickedFunc = ($event)=> {
+        console.log('onCellClicked: ' + $event.rowIndex + ' ' + $event.colDef.field);
+
+        // the binding does not work? so I have to do this
+        if ($event.colDef.field == undefined){ // clicked on delete
+            this.deleteTask();
+        }
     }
 
 
-    modelUpdatedFunc(event){
+    modelUpdatedFunc = (event)=> {
         console.log("model updated");
     }
 
-    readyFunc(event){
+    readyFunc = (event)=> {
         console.log("ready");
     }
 
-    rowDeselectedFunc(event) {
-        this.selectedTaskName = "";
-        console.log("row " + event.node.data.name + " de-selected");
+    rowDeselectedFunc = (event)=> {
+        this.SelectedTask = null;
     }
 
-    rowSelectedFunc(event) {
-        this.selectedTaskName = event.node.data.name;
-        console.log("row " + event.node.data.name + " selected");
+    rowSelectedFunc = (event)=> {
+        this.SelectedTask = event.node.data;
     }
 
-    selectionChangedFunc(event) {
-        console.log("selection changed, " + event.selectedRows.length + " rows selected");
+    selectionChangedFunc = (event)=> {
     }
 
-    deleteTaskRendererFunc(){
+    deleteTaskRendererFunc() {
         console.log("delete task handler");
         return '<button width="14" height="14" align="middle" (click)="this.deleteTask()">' +
                     '<img src="../../resources/images/trash.png" width="12" height="12"/>' +
@@ -135,15 +142,15 @@ export class ChartComponent {
     }
 
     addNewTask(){
-        var taskName = Math.floor((Math.random() * 10000) + 1);
-        var period = Math.floor((Math.random() * 100) + 1);
-        var executionTime = Math.floor((Math.random() * 100) + 1);
+        var taskName = Math.floor((Math.random() * 10000) + 1).toString();
+        var period = Math.floor((Math.random() * 100) + 1).toString();
+        var executionTime = Math.floor((Math.random() * 100) + 1).toString();
 
         this.addTask(taskName, period, executionTime);
     }
 
     addTask(name:string, period:string, executionTime:string){
-        if (name.length == 0 || period.length == 0 || executionTime.length == 0){
+        if (name.length == 0 || period.length== 0 || executionTime.length == 0){
             console.log("invalid input");
             return;
         }
@@ -154,14 +161,10 @@ export class ChartComponent {
         this._http.post("/api/addTask", JSON.stringify({name:name,period:period,executionTime:executionTime}),{headers:headers})
             .map(res => res.json())
             .subscribe(seq =>  this.rowData = seq.tasks);
-
-        //this.gridOptions.api.selectIndex(0,false,false);
     }
 
-    deleteTask(){
-        alert("inside delete task");
-        console.log("delete task");
-        if (this.selectedTaskName == ""){
+    updateTask(){
+        if (this.SelectedTask == null){
             console.log("select a task");
             return;
         }
@@ -169,10 +172,23 @@ export class ChartComponent {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-        this._http.post("/api/deleteTask", JSON.stringify({name:this.selectedTaskName}),{headers:headers})
+        this._http.post("/api/updateTask", JSON.stringify({name:this.SelectedTask.name, period:this.SelectedTask.period, executionTime:this.SelectedTask.executionTime}),{headers:headers})
             .map(res => res.json())
-            .subscribe((seq) =>
-            {
+            .subscribe(seq =>  this.rowData = seq.tasks);
+    }
+
+    deleteTask(){
+        if (this.SelectedTask == null){
+            console.log("select a task");
+            return;
+        }
+
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+
+        this._http.post("/api/deleteTask", JSON.stringify({name:this.SelectedTask.name, period:this.SelectedTask.period, executionTime:this.SelectedTask.executionTime}),{headers:headers})
+            .map(res => res.json())
+            .subscribe((seq) => {
                 this.rowData = seq.tasks;
             });
     }
