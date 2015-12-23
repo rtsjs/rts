@@ -43,7 +43,7 @@ export class ChartComponent {
     public columnDefs:Array<any>;
     public gridOptions:any;
     public rowData:Array<any>;
-    public SelectedTask:any;
+    public selectedTask:any;
     private _http:Http;
     private sequence:any;
 
@@ -118,11 +118,11 @@ export class ChartComponent {
     }
 
     rowDeselectedFunc = (event)=> {
-        this.SelectedTask = null;
+        this.selectedTask = null;
     }
 
     rowSelectedFunc = (event)=> {
-        this.SelectedTask = event.node.data;
+        this.selectedTask = event.node.data;
     }
 
     selectionChangedFunc = (event)=> {
@@ -164,7 +164,7 @@ export class ChartComponent {
     }
 
     updateTask(){
-        if (this.SelectedTask == null){
+        if (this.selectedTask == null){
             console.log("select a task");
             return;
         }
@@ -172,13 +172,13 @@ export class ChartComponent {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-        this._http.post("/api/updateTask", JSON.stringify({name:this.SelectedTask.name, period:this.SelectedTask.period, executionTime:this.SelectedTask.executionTime}),{headers:headers})
+        this._http.post("/api/updateTask", JSON.stringify({name:this.selectedTask.name, period:this.selectedTask.period, executionTime:this.selectedTask.executionTime}),{headers:headers})
             .map(res => res.json())
             .subscribe(seq =>  this.rowData = seq.tasks);
     }
 
     deleteTask(){
-        if (this.SelectedTask == null){
+        if (this.selectedTask == null){
             console.log("select a task");
             return;
         }
@@ -186,7 +186,7 @@ export class ChartComponent {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-        this._http.post("/api/deleteTask", JSON.stringify({name:this.SelectedTask.name, period:this.SelectedTask.period, executionTime:this.SelectedTask.executionTime}),{headers:headers})
+        this._http.post("/api/deleteTask", JSON.stringify({name:this.selectedTask.name, period:this.selectedTask.period, executionTime:this.selectedTask.executionTime}),{headers:headers})
             .map(res => res.json())
             .subscribe((seq) => {
                 this.rowData = seq.tasks;
