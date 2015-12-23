@@ -2,22 +2,22 @@
   "sequenceName": "Sequence 1",
   "tasks" : [
     {
-      "name": "task1",
+      "name": "Task 1",
       "executionTime": "1",
       "period": "8"
     },
     {
-      "name": "task2",
+      "name": "Task 2",
       "executionTime": "2",
       "period": "5"
     },
     {
-      "name": "task3",
+      "name": "Task 3",
       "executionTime": "3",
       "period": "10"
     },
     {
-      "name": "task4",
+      "name": "Task 4",
       "executionTime": "4",
       "period": "21"
     }
