@@ -72,7 +72,6 @@ export class Tasks {
 
             json["tasks"].forEach(function(result, index) {
                 if(result['name'] === task.name) {
-                    result['name'] = task.name;
                     result['executionTime'] = task.executionTime;
                     result['period'] = task.period;
                 }
