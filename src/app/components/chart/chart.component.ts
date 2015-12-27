@@ -34,7 +34,7 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
                 </td>
             </tr>
         </table>
-	`,
+   `,
 
     directives: [ ag.grid.AgGridNg2, NgFor, NgIf],
 })
@@ -44,8 +44,10 @@ export class ChartComponent {
     public gridOptions:any;
     public rowData:Array<any>;
     public selectedTask:any;
+    //public pageSize:any;
     private _http:Http;
     private sequence:any;
+    private isDirty:boolean;
 
     constructor(public http:Http){
 
@@ -60,15 +62,20 @@ export class ChartComponent {
             onReady: this.readyFunc,
             onCellClicked: this.cellClickedFunc,
             enableColResize: true,
+            rowData: null,
             sizeToFit: true,
-            suppressCellSelection: true
+            suppressCellSelection: true,
+            floatingTopRowData: [],
+            floatingBottomRowData: [],
             //singleClickEdit: true
         };
+
+        //this.pageSize = '10';
 
         // put columnDefs directly onto the controller
         this.columnDefs = [
             //{headerName: "...", width: 30, checkboxSelection: true, suppressSorting: true, suppressMenu: true, suppressSizeToFit: true },
-            {headerName: "Name", field: "name", padding: 10, headerTooltip:"Task name", cellStyle: {color: '#000000'}},
+            {headerName: "Name", field: "name", editable:true, padding: 10, headerTooltip:"Task name", cellStyle: {color: '#000000'}},
             {headerName: "Period", field: "period", editable:true, padding: 10,  headerTooltip:"Task period", cellStyle: {color: '#000000'}},
             {headerName: "Time", field: "executionTime", editable:true, padding: 10,  headerTooltip:"Task execution time", cellStyle: {color: '#000000'}},
             {headerName: "...", width: 50, suppressSorting: true, suppressMenu: true, suppressSizeToFit: false, editable:false, cellRenderer: this.deleteTaskRendererFunc}
@@ -82,6 +89,8 @@ export class ChartComponent {
          ];
          */
 
+        this.isDirty = false;
+
         // put data directly onto the controller
         this._http = http;
         this.getGridData();
@@ -92,11 +101,18 @@ export class ChartComponent {
     }
 
     cellValueChangedFunc = (event)=> {
+        console.log("*******cellValueChangedFunc " + event.colDef.field);
         if (event.newValue == event.oldValue){
             return;
         }
 
-        this.updateTask();
+        this.isDirty = true;
+
+        if (event.colDef.field == 'name'){
+            this.updateTask(event.oldValue);
+        }else {
+            this.updateTask();
+        }
     }
 
     cellClickedFunc = ($event)=> {
@@ -108,45 +124,64 @@ export class ChartComponent {
         }
     }
 
-
     modelUpdatedFunc = (event)=> {
-        console.log("model updated");
+        console.log("modelUpdatedFunc " + event);
     }
 
     readyFunc = (event)=> {
-        console.log("ready");
+        console.log("readyFunc " + event);
+        event.api.sizeColumnsToFit();
     }
 
     rowDeselectedFunc = (event)=> {
+        console.log("rowDeselectedFunc " + event);
         this.selectedTask = null;
     }
 
     rowSelectedFunc = (event)=> {
+        console.log("rowSelectedFunc " + event.node);
         this.selectedTask = event.node.data;
     }
 
     selectionChangedFunc = (event)=> {
+        console.log("selectionChangedFunc " + event);
+        if (this.isDirty){
+            this.isDirty = false;
+        }
     }
 
     deleteTaskRendererFunc() {
         console.log("delete task handler");
         return '<button width="14" height="14" align="middle" (click)="this.deleteTask()">' +
-                    '<img src="../../resources/images/trash.png" width="12" height="12"/>' +
-                '</button>';
+            '<img src="../../resources/images/trash.png" width="12" height="12"/>' +
+            '</button>';
     }
+
+    createData() {
+        var result = [];
+        result.push({
+            name: "Double-click to enter name",
+            period: "Double-click to enter period",
+            executionTime: "Double-click to enter execution time"
+        });
+        return result;
+    }
+
 
     getGridData() {
-                    this._http.get("/api/task")
-                    .map(res => res.json())
-                    .subscribe(seq =>  this.rowData = seq.tasks);
+        this._http.get("/api/task")
+            .map(res => res.json())
+            .subscribe(seq =>  this.rowData = seq.tasks);
     }
 
-    addNewTask(){
-        var taskName = Math.floor((Math.random() * 10000) + 1).toString();
-        var period = Math.floor((Math.random() * 100) + 1).toString();
-        var executionTime = Math.floor((Math.random() * 100) + 1).toString();
+    addNewTask() {
+        //var taskName = Math.floor((Math.random() * 10000) + 1).toString();
+        //var period = Math.floor((Math.random() * 100) + 1).toString();
+        //var executionTime = Math.floor((Math.random() * 100) + 1).toString();
 
-        this.addTask(taskName, period, executionTime);
+        var rows = this.createData();
+        this.gridOptions.api.setFloatingTopRowData(rows);
+        //this.gridOptions.api.selectIndex(0);
     }
 
     addTask(name:string, period:string, executionTime:string){
@@ -172,9 +207,19 @@ export class ChartComponent {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-        this._http.post("/api/updateTask", JSON.stringify({name:this.selectedTask.name, period:this.selectedTask.period, executionTime:this.selectedTask.executionTime}),{headers:headers})
+        var oldName = "";
+        if (arguments.length != 0) {
+            oldName = arguments[0];
+        }
+        this._http.post("/api/updateTask", JSON.stringify({
+                oldName: oldName,
+                name: this.selectedTask.name,
+                period: this.selectedTask.period,
+                executionTime: this.selectedTask.executionTime
+            }), {headers: headers})
             .map(res => res.json())
             .subscribe(seq =>  this.rowData = seq.tasks);
+
     }
 
     deleteTask(){
@@ -193,5 +238,3 @@ export class ChartComponent {
             });
     }
 };
-
-

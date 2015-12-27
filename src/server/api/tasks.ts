@@ -12,11 +12,11 @@ export class Tasks {
         console.log("Path=" + path);
         //return path;
         fs.readFile(path, 'utf8', function (err, data) {
-/*
-            if (this._tasks !== null) {
-                return this._tasks;
-            }
-*/
+            /*
+             if (this._tasks !== null) {
+             return this._tasks;
+             }
+             */
             if (err) {
                 return cb(err);
             }
@@ -65,17 +65,32 @@ export class Tasks {
                 return cb(e);
             }
 
-            var ret = Tasks.contains(json["tasks"], task.name);
-            if (!ret) {
-                return cb("error: task does not exist");
-            }
-
-            json["tasks"].forEach(function(result, index) {
-                if(result['name'] === task.name) {
-                    result['executionTime'] = task.executionTime;
-                    result['period'] = task.period;
+            if (task.oldName == ""){
+                var ret = Tasks.contains(json["tasks"], task.name);
+                if (!ret) {
+                    return cb("error: task does not exist");
                 }
-            });
+
+                json["tasks"].forEach(function(result, index) {
+                    if (result['name'] === task.name) {
+                        result['executionTime'] = task.executionTime;
+                        result['period'] = task.period;
+                    }
+                });
+            }else {
+                var ret = Tasks.contains(json["tasks"], task.oldName);
+                if (!ret) {
+                    return cb("error: task does not exist");
+                }
+
+                json["tasks"].forEach(function(result, index) {
+                    if (result['name'] === task.oldName) {
+                        result['name'] = task.name;
+                        result['executionTime'] = task.executionTime;
+                        result['period'] = task.period;
+                    }
+                });
+            }
 
             fs.writeFile(path, JSON.stringify(json, null, 4), function (err) {
                 if(err){
@@ -131,4 +146,3 @@ export class Tasks {
         return false;
     }
 }
-
