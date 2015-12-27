@@ -157,17 +157,6 @@ export class ChartComponent {
             '</button>';
     }
 
-    createData() {
-        var result = [];
-        result.push({
-            name: "Double-click to enter name",
-            period: "Double-click to enter period",
-            executionTime: "Double-click to enter execution time"
-        });
-        return result;
-    }
-
-
     getGridData() {
         this._http.get("/api/task")
             .map(res => res.json())
@@ -175,13 +164,9 @@ export class ChartComponent {
     }
 
     addNewTask() {
-        //var taskName = Math.floor((Math.random() * 10000) + 1).toString();
-        //var period = Math.floor((Math.random() * 100) + 1).toString();
-        //var executionTime = Math.floor((Math.random() * 100) + 1).toString();
-
-        var rows = this.createData();
-        this.gridOptions.api.setFloatingTopRowData(rows);
-        //this.gridOptions.api.selectIndex(0);
+        this.addTask("Double-click to enter name",
+                     "Double-click to enter period",
+                     "Double-click to enter execution time");
     }
 
     addTask(name:string, period:string, executionTime:string){
@@ -195,7 +180,9 @@ export class ChartComponent {
 
         this._http.post("/api/addTask", JSON.stringify({name:name,period:period,executionTime:executionTime}),{headers:headers})
             .map(res => res.json())
-            .subscribe(seq =>  this.rowData = seq.tasks);
+            .subscribe((seq) => {
+                this.rowData = seq.tasks;
+            });
     }
 
     updateTask(){
@@ -218,8 +205,9 @@ export class ChartComponent {
                 executionTime: this.selectedTask.executionTime
             }), {headers: headers})
             .map(res => res.json())
-            .subscribe(seq =>  this.rowData = seq.tasks);
-
+            .subscribe((seq) => {
+                this.rowData = seq.tasks;
+            });
     }
 
     deleteTask(){
