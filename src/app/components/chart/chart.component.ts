@@ -35,16 +35,15 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
             </tr>
         </table>
    `,
-
     directives: [ag.grid.AgGridNg2],
 })
 
 export class ChartComponent {
+    public static rowIndex:number = 0;
     public columnDefs:Array<any>;
     public gridOptions:any;
     public rowData:Array<any>;
     public selectedTask:any;
-    public rowIndex:number;
     public previousSelectedTask:any;
     public oldTaskName:string;
     private _http:Http;
@@ -87,23 +86,17 @@ export class ChartComponent {
          ];
          */
 
-        this.rowIndex = 0;
         this.oldTaskName = "";
 
         // put data directly onto the controller
         this._http = http;
         this.getGridData();
-        /*
-         this.getGridData()
-         this.refreshGrid();
-         */
     }
 
     cellValueChangedFunc = (event)=> {
         if (event.newValue == event.oldValue){
             return;
         }
-
         if (event.colDef.field == 'name') {
             this.oldTaskName = event.oldValue;
         }
@@ -117,10 +110,11 @@ export class ChartComponent {
             this.deleteTask();
             return;
         }else {
-            if (this.rowIndex != $event.rowIndex) {
+            if (ChartComponent.rowIndex != $event.rowIndex) {
                 this.updateTask();
-                this.rowIndex = $event.rowIndex;
             }
+
+            ChartComponent.rowIndex = $event.rowIndex;
         }
     }
 
