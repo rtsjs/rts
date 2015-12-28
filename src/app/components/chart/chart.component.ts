@@ -36,7 +36,7 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
         </table>
    `,
 
-    directives: [ ag.grid.AgGridNg2, NgFor, NgIf],
+    directives: [ag.grid.AgGridNg2],
 })
 
 export class ChartComponent {
@@ -44,10 +44,10 @@ export class ChartComponent {
     public gridOptions:any;
     public rowData:Array<any>;
     public selectedTask:any;
-    //public pageSize:any;
+    public rowIndex:number;
+    public previousSelectedTask:any;
+    public oldTaskName:string;
     private _http:Http;
-    private sequence:any;
-    private isDirty:boolean;
 
     constructor(public http:Http){
 
@@ -64,9 +64,7 @@ export class ChartComponent {
             enableColResize: true,
             rowData: null,
             sizeToFit: true,
-            suppressCellSelection: true,
-            floatingTopRowData: [],
-            floatingBottomRowData: [],
+            suppressCellSelection: true
             //singleClickEdit: true
         };
 
@@ -89,7 +87,8 @@ export class ChartComponent {
          ];
          */
 
-        this.isDirty = false;
+        this.rowIndex = 0;
+        this.oldTaskName = "";
 
         // put data directly onto the controller
         this._http = http;
@@ -101,17 +100,12 @@ export class ChartComponent {
     }
 
     cellValueChangedFunc = (event)=> {
-        console.log("*******cellValueChangedFunc " + event.colDef.field);
         if (event.newValue == event.oldValue){
             return;
         }
 
-        this.isDirty = true;
-
-        if (event.colDef.field == 'name'){
-            this.updateTask(event.oldValue);
-        }else {
-            this.updateTask();
+        if (event.colDef.field == 'name') {
+            this.oldTaskName = event.oldValue;
         }
     }
 
@@ -121,33 +115,31 @@ export class ChartComponent {
         // the binding does not work? so I have to do this
         if ($event.colDef.field == undefined){ // clicked on delete
             this.deleteTask();
+            return;
+        }else {
+            if (this.rowIndex != $event.rowIndex) {
+                this.updateTask();
+                this.rowIndex = $event.rowIndex;
+            }
         }
     }
 
     modelUpdatedFunc = (event)=> {
-        console.log("modelUpdatedFunc " + event);
     }
 
     readyFunc = (event)=> {
-        console.log("readyFunc " + event);
         event.api.sizeColumnsToFit();
     }
 
     rowDeselectedFunc = (event)=> {
-        console.log("rowDeselectedFunc " + event);
-        this.selectedTask = null;
+        this.previousSelectedTask = this.selectedTask;
     }
 
     rowSelectedFunc = (event)=> {
-        console.log("rowSelectedFunc " + event.node);
         this.selectedTask = event.node.data;
     }
 
-    selectionChangedFunc = (event)=> {
-        console.log("selectionChangedFunc " + event);
-        if (this.isDirty){
-            this.isDirty = false;
-        }
+    selectionChangedFunc = ($event)=> {
     }
 
     deleteTaskRendererFunc() {
@@ -164,9 +156,9 @@ export class ChartComponent {
     }
 
     addNewTask() {
-        this.addTask("Double-click to enter name",
-                     "Double-click to enter period",
-                     "Double-click to enter execution time");
+        this.addTask("(Name)",
+                     "(Period)",
+                     "(Time)");
     }
 
     addTask(name:string, period:string, executionTime:string){
@@ -178,12 +170,13 @@ export class ChartComponent {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-        this._http.post("/api/addTask", JSON.stringify({name:name,period:period,executionTime:executionTime}),{headers:headers})
+        var res = this._http.post("/api/addTask", JSON.stringify({name:name,period:period,executionTime:executionTime}),{headers:headers})
             .map(res => res.json())
             .subscribe((seq) => {
                 this.rowData = seq.tasks;
             });
     }
+
 
     updateTask(){
         if (this.selectedTask == null){
@@ -194,20 +187,18 @@ export class ChartComponent {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-        var oldName = "";
-        if (arguments.length != 0) {
-            oldName = arguments[0];
-        }
         this._http.post("/api/updateTask", JSON.stringify({
-                oldName: oldName,
-                name: this.selectedTask.name,
-                period: this.selectedTask.period,
-                executionTime: this.selectedTask.executionTime
+                oldName: this.oldTaskName,
+                name: this.previousSelectedTask.name,
+                period: this.previousSelectedTask.period,
+                executionTime: this.previousSelectedTask.executionTime
             }), {headers: headers})
             .map(res => res.json())
             .subscribe((seq) => {
                 this.rowData = seq.tasks;
             });
+
+        this.oldTaskName = "";
     }
 
     deleteTask(){
