@@ -12,12 +12,22 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
             <tr><h3>AG Grid</h3></tr>
             <tr>
                 <td align="right" vertical-align="middle">
-                    <button (click)="addNewTask()">
+                    <button (click)="addNewTask()" type="button">
                         <img src="../../resources/images/plus.svg" width="12" height="12"/>
                     </button>
-                    <button (click)="getGridData()">
+                    <button (click)="getGridData()" type="button">
                         <img src="../../resources/images/loop-circular.svg" width="12" height="12"/>
                     </button>
+                    <div class="dropdown">
+                        <button (click)="displayGridMenu()" type="button"/>
+                            <img src="../../resources/images/menu.svg" width="12" height="12"/>
+                        </button>
+                        <div id="gridMenuDropdown" class="dropdown-content" width="36">
+                            <a href="#">TO DO</a>
+                            <a href="#">TO DO</a>
+                            <a href="#">TO DO</a>
+                        </div>
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -35,11 +45,12 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
             </tr>
         </table>
    `,
-    directives: [ag.grid.AgGridNg2],
+    directives: [ag.grid.AgGridNg2]
 })
 
 export class ChartComponent {
     public static rowIndex:number = 0;
+    public static isDirty:boolean = false;
     public columnDefs:Array<any>;
     public gridOptions:any;
     public rowData:Array<any>;
@@ -53,6 +64,7 @@ export class ChartComponent {
         this.gridOptions = {
             pinnedColumnCount: 0,
             rowSelection: 'single',
+            onRowClicked: this.rowClickedFunc,
             onRowSelected: this.rowSelectedFunc,
             onCellValueChanged: this.cellValueChangedFunc,
             onRowDeselected: this.rowDeselectedFunc,
@@ -67,15 +79,13 @@ export class ChartComponent {
             //singleClickEdit: true
         };
 
-        //this.pageSize = '10';
-
         // put columnDefs directly onto the controller
         this.columnDefs = [
             //{headerName: "...", width: 30, checkboxSelection: true, suppressSorting: true, suppressMenu: true, suppressSizeToFit: true },
-            {headerName: "Name", field: "name", editable:true, padding: 10, headerTooltip:"Task name", cellStyle: {color: '#000000'}},
-            {headerName: "Period", field: "period", editable:true, padding: 10,  headerTooltip:"Task period", cellStyle: {color: '#000000'}},
-            {headerName: "Time", field: "executionTime", editable:true, padding: 10,  headerTooltip:"Task execution time", cellStyle: {color: '#000000'}},
-            {headerName: "...", width: 50, suppressSorting: true, suppressMenu: true, suppressSizeToFit: false, editable:false, cellRenderer: this.deleteTaskRendererFunc}
+            {headerName: "Name", minWidth: 100, field: "name", editable:true, padding: 10, headerTooltip:"Task name", cellStyle: {color: '#000000'}},
+            {headerName: "Period", minWidth: 100, field: "period", editable:true, padding: 10,  headerTooltip:"Task period", cellStyle: {color: '#000000'}},
+            {headerName: "Time", minWidth: 100, field: "executionTime", editable:true, padding: 10,  headerTooltip:"Task execution time", cellStyle: {color: '#000000'}},
+            {headerName: "...", width: 35, minWidth: 35, suppressSorting: true, suppressMenu: true, suppressSizeToFit: false, editable:false, cellRenderer: this.deleteTaskRendererFunc}
         ];
 
         /*
@@ -93,13 +103,19 @@ export class ChartComponent {
         this.getGridData();
     }
 
+    rowClickedFunc = (event)=> {
+    }
+
     cellValueChangedFunc = (event)=> {
         if (event.newValue == event.oldValue){
+            ChartComponent.isDirty = false;
             return;
         }
         if (event.colDef.field == 'name') {
             this.oldTaskName = event.oldValue;
         }
+
+        ChartComponent.isDirty = true;
     }
 
     cellClickedFunc = ($event)=> {
@@ -111,7 +127,10 @@ export class ChartComponent {
             return;
         }else {
             if (ChartComponent.rowIndex != $event.rowIndex) {
-                this.updateTask();
+                if (ChartComponent.isDirty) {
+                    this.updateTask();
+                    ChartComponent.isDirty = false;
+                }
             }
 
             ChartComponent.rowIndex = $event.rowIndex;
@@ -127,13 +146,16 @@ export class ChartComponent {
 
     rowDeselectedFunc = (event)=> {
         this.previousSelectedTask = this.selectedTask;
+        //alert("rowDeselectedFunc");
     }
 
     rowSelectedFunc = (event)=> {
         this.selectedTask = event.node.data;
+        //alert("rowSelectedFunc");
     }
 
     selectionChangedFunc = ($event)=> {
+        //alert("selectionChangedFunc");
     }
 
     deleteTaskRendererFunc() {
@@ -143,6 +165,24 @@ export class ChartComponent {
             '</button>';
     }
 
+    displayGridMenu() {
+        document.getElementById("gridMenuDropdown").classList.toggle("show");
+    }
+
+    onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+
+
     getGridData() {
         this._http.get("/api/task")
             .map(res => res.json())
@@ -150,12 +190,12 @@ export class ChartComponent {
     }
 
     addNewTask() {
-        this.addTask("(Name)",
-                     "(Period)",
-                     "(Time)");
+        this.addTask("(Double-click to edit name)",
+                     "(Double-click to edit period)",
+                     "(Double-click to edit time)");
     }
 
-    addTask(name:string, period:string, executionTime:string){
+    addTask(name:string, period:string, executionTime:string) {
         if (name.length == 0 || period.length== 0 || executionTime.length == 0){
             console.log("invalid input");
             return;
@@ -166,14 +206,17 @@ export class ChartComponent {
 
         var res = this._http.post("/api/addTask", JSON.stringify({name:name,period:period,executionTime:executionTime}),{headers:headers})
             .map(res => res.json())
-            .subscribe((seq) => {
-                this.rowData = seq.tasks;
-            });
+            .subscribe(
+                data => this.rowData = data,
+                err => {
+                        console.log("Error:" + err);
+                },
+                ()=> {
+                });
     }
 
-
     updateTask(){
-        if (this.selectedTask == null){
+        if (this.selectedTask == null) {
             console.log("select a task");
             return;
         }
@@ -189,14 +232,17 @@ export class ChartComponent {
             }), {headers: headers})
             .map(res => res.json())
             .subscribe((seq) => {
-                this.rowData = seq.tasks;
+                    this.rowData = seq.tasks,
+                    err => {
+                        console.log("Error:" + err);
+                    }, ()=> {}
             });
 
         this.oldTaskName = "";
     }
 
     deleteTask(){
-        if (this.selectedTask == null){
+        if (this.selectedTask == null) {
             console.log("select a task");
             return;
         }
@@ -204,7 +250,12 @@ export class ChartComponent {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-        this._http.post("/api/deleteTask", JSON.stringify({name:this.selectedTask.name, period:this.selectedTask.period, executionTime:this.selectedTask.executionTime}),{headers:headers})
+        this._http.post("/api/deleteTask",
+                        JSON.stringify({
+                            name:this.selectedTask.name,
+                            period:this.selectedTask.period,
+                            executionTime:this.selectedTask.executionTime}),
+                        {headers:headers})
             .map(res => res.json())
             .subscribe((seq) => {
                 this.rowData = seq.tasks;
