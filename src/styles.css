@@ -10,9 +10,8 @@ button {padding: 0.2em; font-size: 14px;}
 /* Dropdown Button */
 .dropbtn {
     background-color: #ffffff;
-    color: white;
     padding: 16px;
-    font-size: 16px;
+    font-size: 12px;
     border: none;
     cursor: pointer;
 }
@@ -31,8 +30,12 @@ button {padding: 0.2em; font-size: 14px;}
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
     display: none;
+    margin-left: 30px;
+    margin-bottom: 30px;
+    text-align: left;
     position: absolute;
     background-color: #f9f9f9;
+    width: 200px;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
@@ -50,3 +53,22 @@ button {padding: 0.2em; font-size: 14px;}
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
+
+.menubtn{
+    border: 1px solid #ddd;
+    background-color: #f0f0f0;
+    padding: 4px 12px;
+
+    -o-transition: background-color .2s ease-in;
+    -moz-transition: background-color .2s ease-in;
+    -webkit-transition: background-color .2s ease-in;
+    transition: background-color .2s ease-in;
+}
+
+.menubtn:hover {
+    background-color: #e5e5e5;
+}
+
+.menubtn:active {
+    background-color: #ccc;
+}

@@ -23,9 +23,18 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
                             <img src="../../resources/images/menu.svg" width="12" height="12"/>
                         </button>
                         <div id="gridMenuDropdown" class="dropdown-content" width="36">
-                            <a href="#">TO DO</a>
-                            <a href="#">TO DO</a>
-                            <a href="#">TO DO</a>
+                            <table>
+                                <tr>
+                                    <td style="padding-right:20px">
+                                        <input type="checkbox" (click)="enableSorting()">Enable sorting
+                                    </td>
+                                </tr>
+                                <tr>
+                                 <td style="padding-right:20px">
+                                        <input type="checkbox" (click)="enableColumnResize()">Enable column re-size
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </td>
@@ -36,8 +45,8 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
                         [column-defs]="columnDefs"
                         [row-data]="rowData"
                         [grid-options]="gridOptions"
-                        [enable-col-resize]="true"
-                        [enable-sorting]="true"
+                        [enable-col-resize]="false"
+                        [enable-sorting]="false"
                         [row-selection]="none"
                         row-height="35">
                     </ag-grid-ng2>
@@ -72,7 +81,6 @@ export class ChartComponent {
             onModelUpdated: this.modelUpdatedFunc,
             onReady: this.readyFunc,
             onCellClicked: this.cellClickedFunc,
-            enableColResize: true,
             rowData: null,
             sizeToFit: true,
             suppressCellSelection: true
@@ -158,11 +166,25 @@ export class ChartComponent {
         //alert("selectionChangedFunc");
     }
 
+    enableSorting(){
+        if (this.gridOptions != null && this.gridOptions.enableSorting != null){
+            this.gridOptions.enableSorting = !this.gridOptions.enableSorting;
+            this.gridOptions.api.refreshHeader();
+        }
+    }
+
+    enableColumnResize(){
+        if (this.gridOptions != null && this.gridOptions.enableColResize != null) {
+            this.gridOptions.enableColResize = !this.gridOptions.enableColResize;
+            this.gridOptions.api.refreshHeader();
+        }
+    }
+
     deleteTaskRendererFunc() {
         console.log("delete task handler");
-        return '<button width="14" height="14" align="middle" (click)="this.deleteTask()">' +
-            '<img src="../../resources/images/trash.png" width="12" height="12"/>' +
-            '</button>';
+        return '<button width="14" height="14" align="middle" (click)="deleteTask()">' +
+                    '<img src="../../resources/images/trash.png" width="12" height="12"/>' +
+                '</button>';
     }
 
     displayGridMenu() {
@@ -181,7 +203,6 @@ export class ChartComponent {
             }
         }
     }
-
 
     getGridData() {
         this._http.get("/api/task")
