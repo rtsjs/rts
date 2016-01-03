@@ -105,4 +105,5 @@ window.onload = function () {
     simulation.start();
     setTimeout(function () { simulation.stop(); }, 60000);
 };
+
 //# sourceMappingURL=simulation.js.map

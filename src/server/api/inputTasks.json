@@ -1,25 +1,15 @@
- {
-  "sequenceName": "Sequence 1",
-  "tasks" : [
-    {
-      "name": "Task 1",
-      "executionTime": "1",
-      "period": "8"
-    },
-    {
-      "name": "Task 2",
-      "executionTime": "2",
-      "period": "5"
-    },
-    {
-      "name": "Task 3",
-      "executionTime": "3",
-      "period": "10"
-    },
-    {
-      "name": "Task 4",
-      "executionTime": "4",
-      "period": "21"
-    }
-  ]
+{
+    "sequenceName": "Sequence 1",
+    "tasks": [
+        {
+            "name": "Task 2",
+            "executionTime": "2",
+            "period": "5"
+        },
+        {
+            "name": "Task 3",
+            "executionTime": "3",
+            "period": "10"
+        }
+    ]
 }

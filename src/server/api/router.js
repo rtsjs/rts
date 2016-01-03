@@ -14,6 +14,24 @@ router.get("/task", function (req, res) {
 router.get("/task/:id", function (req, res) {
     res.send("Sending task " + req.params.id);
 });
+router.post("/addTask", function (req, res) {
+    var tasks = new Tasks.Tasks();
+    tasks.addTask(__dirname + '/inputTasks.json', req.body, function (data) {
+        res.send(data);
+    });
+});
+router.post("/updateTask", function (req, res) {
+    var tasks = new Tasks.Tasks();
+    tasks.updateTask(__dirname + '/inputTasks.json', req.body, function (data) {
+        res.sendStatus(200);
+    });
+});
+router.post("/deleteTask", function (req, res) {
+    var tasks = new Tasks.Tasks();
+    tasks.deleteTask(__dirname + '/inputTasks.json', req.body, function (data) {
+        res.sendStatus(200);
+    });
+});
 module.exports = router;
 
 //# sourceMappingURL=router.js.map

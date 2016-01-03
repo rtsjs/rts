@@ -25,7 +25,7 @@ router.get("/task/:id", (req:any, res:any) => {
 router.post("/addTask", (req:any, res:any) => {
     var tasks = new Tasks.Tasks();
     tasks.addTask(__dirname + '/inputTasks.json', req.body, function(data){
-        res.sendStatus(200);
+        res.send(data);
     });
 });
 

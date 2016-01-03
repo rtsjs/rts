@@ -6,6 +6,21 @@ var apiRouter = require("./api/router");
 var port = process.env.PORT || 8001;
 var app = express();
 var environment = process.env.NODE_ENV;
+var Log = require('./api/RTSLog');
+var TestTask = require('./lib/TestTask');
+var HyperScheduler = require('./lib/HyperScheduler');
+Log.log.info('Scheduler test started');
+var scheduler = new HyperScheduler.HyperScheduler();
+var testTask1 = new TestTask.TestTask(10);
+var testTask2 = new TestTask.TestTask(20);
+var testTask3 = new TestTask.TestTask(30);
+scheduler.AddPeriodicTask(testTask1, 200);
+scheduler.AddPeriodicTask(testTask2, 400);
+scheduler.AddPeriodicTask(testTask3, 800);
+scheduler.Run(100);
+setTimeout(function () {
+    scheduler.Stop();
+}, 10000);
 // Todo: Need a favorite icon
 //app.use(favicon(__dirname + '/favicon.ico'));
 app.use(bodyParser.urlencoded({ extended: true }));
