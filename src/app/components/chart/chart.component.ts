@@ -12,26 +12,26 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
             <tr><h3>AG Grid</h3></tr>
             <tr>
                 <td align="right" vertical-align="middle">
-                    <button (click)="addNewTask()" type="button">
+                    <button (click)="addNewTask()" type="button" title="Add a new task">
                         <img src="../../resources/images/plus.svg" width="12" height="12"/>
                     </button>
-                    <button (click)="getGridData()" type="button">
+                    <button (click)="getGridData()" type="button" title="Refresh">
                         <img src="../../resources/images/loop-circular.svg" width="12" height="12"/>
                     </button>
                     <div class="dropdown">
-                        <button (click)="displayGridMenu()" type="button"/>
+                        <button (click)="displayGridMenu()" type="button" title="Display menu"/>
                             <img src="../../resources/images/menu.svg" width="12" height="12"/>
                         </button>
                         <div id="gridMenuDropdown" class="dropdown-content" width="36">
                             <table>
                                 <tr>
                                     <td style="padding-right:20px">
-                                        <input id="enableColumnSortingCheckbox" type="checkbox" (click)="enableSorting()">Enable sorting
+                                        <input type="checkbox" checked={{"this.gridOptions.enableSorting"}} (click)="toggleSorting()">Disable sorting
                                     </td>
                                 </tr>
                                 <tr>
-                                 <td style="padding-right:20px">
-                                        <input id="enableColumnResizeCheckbox" type="checkbox" (click)="enableColumnResize()">Enable column re-size
+                                    <td style="padding-right:20px">
+                                        <input type="checkbox" checked={{"this.gridOptions.enableColResize"}} (click)="toggleColResizing()">Disable column re-size
                                     </td>
                                 </tr>
                             </table>
@@ -75,8 +75,8 @@ export class ChartComponent {
             onRowSelected: this.rowSelectedFunc,
             onCellValueChanged: this.cellValueChangedFunc,
             onRowDeselected: this.rowDeselectedFunc,
-            onSelectionChanged: this.selectionChangedFunc,
-            onModelUpdated: this.modelUpdatedFunc,
+            //onSelectionChanged: this.selectionChangedFunc,
+            //onModelUpdated: this.modelUpdatedFunc,
             onReady: this.readyFunc,
             onCellClicked: this.cellClickedFunc,
             rowData: null,
@@ -107,6 +107,7 @@ export class ChartComponent {
         // put data directly onto the controller
         this._http = http;
         this.getGridData();
+        this.loadGridSettings();
     }
 
     rowClickedFunc = (event)=> {
@@ -143,31 +144,43 @@ export class ChartComponent {
         }
     }
 
-    modelUpdatedFunc = (event)=> {
-    }
+    //modelUpdatedFunc = (event)=> {
+    //}
 
     readyFunc = (event)=> {
-        this.applyGridSettings();
+        this.loadGridSettings();
         event.api.sizeColumnsToFit();
     }
 
-    applyGridSettings(){
+    toggleSorting(){
+        this.gridOptions.enableSorting = !this.gridOptions.enableSorting;
+    }
+
+    toggleColResizing(){
+        this.gridOptions.enableColResize = !this.gridOptions.enableColResize;
+    }
+
+    displayGridMenu() {
+        var showDropdown = document.getElementById("gridMenuDropdown").classList.toggle("show");
+        if (showDropdown) {
+            this.loadGridSettings();
+        }else {
+            this.saveGridSettings();
+        }
+    }
+
+    loadGridSettings(){
         if (typeof(Storage) !== "undefined") {
-            var enableSorting = localStorage.getItem("enableSorting");
-            if (enableSorting == null){
-                this.enableSorting();
-            }else{
-                this.gridOptions.enableSorting = enableSorting;
-            }
+            this.gridOptions.enableSorting = (localStorage.getItem("enableSorting") === 'true');
+            this.gridOptions.enableColResize = (localStorage.getItem("enableColResize") === 'true');
+        }
+    }
 
-            var enableColResize = localStorage.getItem("enableColResize");
-            if (enableColResize == null){
-                this.enableColumnResize();
-            }else{
-                this.gridOptions.enableColResize = enableColResize;
-            }
-
-            this.gridOptions.api.refreshHeader();
+    saveGridSettings(){
+        this.gridOptions.api.refreshHeader();
+        if (typeof(Storage) !== "undefined") {
+            localStorage.setItem("enableSorting", this.gridOptions.enableSorting);
+            localStorage.setItem("enableColResize", this.gridOptions.enableColResize);
         }
     }
 
@@ -179,57 +192,14 @@ export class ChartComponent {
         this.selectedTask = event.node.data;
     }
 
-    selectionChangedFunc = ($event)=> {
-    }
-
-    enableSorting(){
-        this.gridOptions.enableSorting = !this.gridOptions.enableSorting;
-        this.gridOptions.api.refreshHeader();
-        if (typeof(Storage) !== "undefined") {
-            localStorage.setItem("enableSorting", this.gridOptions.enableSorting);
-        }
-    }
-
-    enableColumnResize(){
-        this.gridOptions.enableColResize = !this.gridOptions.enableColResize;
-        this.gridOptions.api.refreshHeader();
-        if (typeof(Storage) !== "undefined") {
-            localStorage.setItem("enableColResize", this.gridOptions.enableColResize);
-        }
-    }
+    //selectionChangedFunc = ($event)=> {
+    //}
 
     deleteTaskRendererFunc() {
         console.log("delete task handler");
-        return '<button width="14" height="14" align="middle" (click)="deleteTask()">' +
+        return '<button width="14" height="14" align="middle" title="Delete task" (click)="deleteTask()">' +
                     '<img src="../../resources/images/trash.png" width="12" height="12"/>' +
                 '</button>';
-    }
-
-    displayGridMenu() {
-        if (typeof(Storage) !== "undefined") {
-            var enableColResize = localStorage.getItem("enableColResize");
-            console.log("Enable Col Resize = " + enableColResize);
-            document.getElementById("enableColumnResizeCheckbox").setAttribute("checked", enableColResize);
-
-            var enableSorting = localStorage.getItem("enableSorting");
-            console.log("Enable Col Resize = " + enableSorting);
-            document.getElementById("enableColumnSortingCheckbox").setAttribute("checked", enableSorting);
-        }
-
-        document.getElementById("gridMenuDropdown").classList.toggle("show");
-    }
-
-    onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-            var dropdowns = document.getElementsByClassName("dropdown");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
-            }
-        }
     }
 
     getGridData() {
