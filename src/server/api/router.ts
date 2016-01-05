@@ -32,14 +32,14 @@ router.post("/addTask", (req:any, res:any) => {
 router.post("/updateTask", (req:any, res:any) => {
     var tasks = new Tasks.Tasks();
     tasks.updateTask(__dirname + '/inputTasks.json', req.body, function(data){
-        res.sendStatus(200);
+        res.send(data);
     });
 });
 
 router.post("/deleteTask", (req:any, res:any) => {
     var tasks = new Tasks.Tasks();
     tasks.deleteTask(__dirname + '/inputTasks.json', req.body, function(data){
-        res.sendStatus(200);
+        res.send(data);
     });
 });
 
