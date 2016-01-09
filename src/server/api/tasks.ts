@@ -28,6 +28,7 @@ export class Tasks {
 
         fs.readFile(path, 'utf8', function (err, data) {
             if (err){
+                console.log(err);
                 return cb(err,null);
             }
             var json;
@@ -35,15 +36,13 @@ export class Tasks {
             {
                 json = JSON.parse(data);
             } catch(e){
+                console.log(e);
                 return cb(e,null);
-            }
-            var ret = Tasks.contains(json["tasks"], task.name);
-            if (ret){
-                return cb("error: task exists");
             }
             json["tasks"].push(task);
             fs.writeFile(path, JSON.stringify(json, null, 4), function (err) {
                 if(err){
+                    console.log(err);
                     return cb(err);
                 }
                 cb("success");
@@ -62,36 +61,19 @@ export class Tasks {
             try {
                 json = JSON.parse(data);
             } catch (e) {
+                console.log(e);
                 return cb(e);
             }
 
-            if (task.oldName == ""){
-                var ret = Tasks.contains(json["tasks"], task.name);
-                if (!ret) {
-                    return cb("error: task does not exist");
+            json["tasks"].forEach(function(result, index) {
+                if (result['id'] === task.id) {
+                    result['name'] = task.name;
+                    result['executionTime'] = task.executionTime;
+                    result['period'] = task.period;
                 }
+            });
 
-                json["tasks"].forEach(function(result, index) {
-                    if (result['name'] === task.name) {
-                        result['executionTime'] = task.executionTime;
-                        result['period'] = task.period;
-                    }
-                });
-            }else {
-                var ret = Tasks.contains(json["tasks"], task.oldName);
-                if (!ret) {
-                    return cb("error: task does not exist");
-                }
-
-                json["tasks"].forEach(function(result, index) {
-                    if (result['name'] === task.oldName) {
-                        result['name'] = task.name;
-                        result['executionTime'] = task.executionTime;
-                        result['period'] = task.period;
-                    }
-                });
-            }
-
+            console.log("writing to file");
             fs.writeFile(path, JSON.stringify(json, null, 4), function (err) {
                 if(err){
                     return cb(err);
@@ -101,8 +83,9 @@ export class Tasks {
         });
     }
 
-    deleteTask(path:string, task:any, cb:any) {
+    deleteTask(path:string, id:any, cb:any) {
 
+        console.log("deleting task");
         fs.readFile(path, 'utf8', function (err, data) {
             if (err) {
                 return cb(err, null);
@@ -111,18 +94,21 @@ export class Tasks {
 
             try
             {
+                console.log("parse data");
                 json = JSON.parse(data);
             } catch(e){
                 return cb(e);
             }
 
-            var ret = Tasks.contains(json["tasks"], task.name);
+            console.log("task id =" + id);
+            var ret = Tasks.contains(json["tasks"], id);
             if (!ret){
+                console.log("task does not exist");
                 return cb("error: task does not exist");
             }
 
             json["tasks"].forEach(function(result, index) {
-                if(result['name'] === task.name) {
+                if(result['id'] === id) {
                     json["tasks"].splice(index, 1);
                 }
             });
@@ -136,9 +122,9 @@ export class Tasks {
         });
     }
 
-    private static contains(data:any, name:any) {
+    private static contains(data:any, id:any) {
         for (var i = 0; i < data.length; i++) {
-            if (data[i].name == name){
+            if (data[i].id == id){
                 return true;
             }
         }

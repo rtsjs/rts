@@ -22,23 +22,26 @@ router.get("/task/:id", (req:any, res:any) => {
 });
 
 
-router.post("/addTask", (req:any, res:any) => {
+router.post("/task", (req:any, res:any) => {
     var tasks = new Tasks.Tasks();
     tasks.addTask(__dirname + '/inputTasks.json', req.body, function(data){
+        console.log("task added");
         res.send(data);
     });
 });
 
-router.post("/updateTask", (req:any, res:any) => {
+router.put("/task/:id", (req:any, res:any) => {
+    req.params.id = req.params.id.slice( 1 );
     var tasks = new Tasks.Tasks();
     tasks.updateTask(__dirname + '/inputTasks.json', req.body, function(data){
         res.send(data);
     });
 });
 
-router.post("/deleteTask", (req:any, res:any) => {
+router.delete("/task/:id", (req:any, res:any) => {
+    req.params.id = req.params.id.slice( 1 );
     var tasks = new Tasks.Tasks();
-    tasks.deleteTask(__dirname + '/inputTasks.json', req.body, function(data){
+    tasks.deleteTask(__dirname + '/inputTasks.json', req.params.id, function(data){
         res.send(data);
     });
 });

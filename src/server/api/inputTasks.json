@@ -2,14 +2,34 @@
     "sequenceName": "Sequence 1",
     "tasks": [
         {
-            "name": "Task 2",
-            "executionTime": "2",
-            "period": "5"
+            "id": "f06ced9b-bcbe-44f0-b2c9-de1abc5b0e34",
+            "name": "Task 1",
+            "period": "2",
+            "executionTime": "5"
         },
         {
+            "id": "21ba6226-999b-47d9-3e6e-09d2b569abd1",
+            "name": "Task 2",
+            "period": "3",
+            "executionTime": "5"
+        },
+        {
+            "id": "4ab075e7-e7ce-40ef-1e30-1cbd0f84caa0",
             "name": "Task 3",
-            "executionTime": "3",
-            "period": "10"
+            "period": "4",
+            "executionTime": "6"
+        },
+        {
+            "id": "af77fb4d-395b-4cc3-7ffd-64e6620af80e",
+            "name": "Task 4",
+            "period": "5",
+            "executionTime": "4"
+        },
+        {
+            "id": "fd8ee48b-7b7b-4efb-ffe4-8deb8360da4b",
+            "name": "Task 5",
+            "period": "4",
+            "executionTime": "2"
         }
     ]
 }
