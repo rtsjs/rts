@@ -19,7 +19,7 @@ export class TestTask {
             if (elapsed >= this.duration)
                 break;
         }
-        var msg = "Test task " + this.name + " started at: " + time0 + " ran for: " + elapsed
+        var msg = this.name + " started at: " + time0 + " ran for: " + elapsed
         console.log(msg)
         Log.log.info(msg)
     }
