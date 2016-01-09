@@ -1,3 +1,4 @@
+import {Simulation} from "./simulation";
 'use strict';
 import express = require('express');
 import Tasks = require('./Tasks');
@@ -8,6 +9,11 @@ router.get("/test", (req:any, res:any) => {
     res.send("Test router express change ");
 });
 
+router.get("/start", (req:any, res:any) => {
+    var simulation = new Simulation();
+    simulation.start(__dirname + '/inputTasks.json');
+    res.send("Simulation started ");
+});
 
 router.get("/task", (req:any, res:any) => {
 

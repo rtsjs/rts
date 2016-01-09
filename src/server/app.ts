@@ -9,30 +9,30 @@ var port = process.env.PORT || 8001;
 var app = express();
 var environment = process.env.NODE_ENV;
 
-import Log = require('./api/RTSLog')
-import Scheduler = require('./lib/Scheduler')
-import TestTask = require('./lib/TestTask')
-import HyperScheduler = require('./lib/HyperScheduler')
-Log.log.info('Scheduler test started')
+//import Log = require('./api/RTSLog')
+//import Scheduler = require('./lib/Scheduler')
+//import TestTask = require('./lib/TestTask')
+//import HyperScheduler = require('./lib/HyperScheduler')
+//Log.log.info('Scheduler test started')
 
-var scheduler = new HyperScheduler.HyperScheduler();
-var testTask1 = new TestTask.TestTask(10);
-var testTask2 = new TestTask.TestTask(20);
-var testTask3 = new TestTask.TestTask(30);
+//var scheduler = new HyperScheduler.HyperScheduler();
+//var testTask1 = new TestTask.TestTask("t1",10);
+//var testTask2 = new TestTask.TestTask("t2",20);
+//var testTask3 = new TestTask.TestTask("t3",30);
 
-scheduler.AddPeriodicTask(
-    testTask1, 200
-)
-scheduler.AddPeriodicTask(
-    testTask2, 400
-)
-scheduler.AddPeriodicTask(
-    testTask3, 800
-)
-scheduler.Run(100)
-setTimeout(()=>{
-    scheduler.Stop();
-},10000)
+//scheduler.AddPeriodicTask(
+//    testTask1, 200
+//)
+//scheduler.AddPeriodicTask(
+//    testTask2, 400
+//)
+//scheduler.AddPeriodicTask(
+//    testTask3, 800
+//)
+//scheduler.Run(100)
+//setTimeout(()=>{
+//    scheduler.Stop();
+//},10000)
 
 // Todo: Need a favorite icon
 //app.use(favicon(__dirname + '/favicon.ico'));

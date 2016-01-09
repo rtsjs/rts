@@ -1,7 +1,7 @@
 import {Component, NgFor, NgIf, View} from 'angular2/angular2';
 import {Router} from 'angular2/router';
 import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
-//import {ag.grid.AgGridNg2} from 'ag-grid/dist/ag-grid';
+//import {AgGridNg2} from 'ag-grid/dist/ag-grid';
 
 @Component({ selector: 'my-chart' })
 
@@ -17,6 +17,9 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
                     <button (click)="getGridData()" type="button" title="Refresh">
                         <img src="../../resources/images/loop-circular.svg" width="12" height="12"/>
                     </button>
+                    <button (click)="sizeToFit()" type="button" title="Size columns to fit">
+                        <img src="" width="12" height="12"/>
+                    </button>
                     <div class="dropdown">
                         <button (click)="displayGridMenu()" type="button" title="Display menu"/>
                             <img src="../../resources/images/menu.svg" width="12" height="12"/>
@@ -26,7 +29,7 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
                                 <tr>
                                     <td style="padding-right:20px">
                                         <label>
-                                            <input type="checkbox" (change)="gridOptions.enableSorting=$event.target.checked" />
+                                            <input id="enableSortingCheckbox" type="checkbox" (change)="gridOptions.enableSorting=$event.target.checked" />
                                             Enable sorting
                                         </label>
                                     </td>
@@ -34,7 +37,7 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
                                  <tr>
                                     <td style="padding-right: 20px">
                                         <label>
-                                            <input type="checkbox" (change)="gridOptions.enableColResize=$event.target.checked" />
+                                            <input id="enableColumnResizeCheckbox" type="checkbox" (change)="gridOptions.enableColResize=$event.target.checked" />
                                             Enable column re-size
                                         </label>
                                     </td>
@@ -164,10 +167,16 @@ export class ChartComponent {
         }
     }
 
+    sizeToFit(){
+        this.gridOptions.api.sizeColumnsToFit();
+    }
+
     loadGridSettings(){
         if (typeof(Storage) !== "undefined") {
             this.gridOptions.enableSorting = (localStorage.getItem("enableSorting") === 'true');
+            document.getElementById("enableSortingCheckbox").checked = this.gridOptions.enableSorting;
             this.gridOptions.enableColResize = (localStorage.getItem("enableColResize") === 'true');
+            document.getElementById("enableColumnResizeCheckbox").checked = this.gridOptions.enableColResize;
             this.gridOptions.api.refreshHeader();
         }
     }
