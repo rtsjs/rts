@@ -18,7 +18,7 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
                         <img src="../../resources/images/loop-circular.svg" width="12" height="12"/>
                     </button>
                     <button (click)="sizeToFit()" type="button" title="Size columns to fit">
-                        <img src="" width="12" height="12"/>
+                        <img src="../../resources/images/resize.png" width="12" height="12"/>
                     </button>
                     <div class="dropdown">
                         <button (click)="displayGridMenu()" type="button" title="Display menu"/>
