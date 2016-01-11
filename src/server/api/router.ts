@@ -12,7 +12,7 @@ router.get("/test", (req:any, res:any) => {
 router.get("/start", (req:any, res:any) => {
     var simulation = new Simulation();
     simulation.start(__dirname + '/inputTasks.json');
-    res.send("Simulation started ");
+    res.end("Simulation started ");
 });
 
 router.get("/task", (req:any, res:any) => {

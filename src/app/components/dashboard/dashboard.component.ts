@@ -43,6 +43,12 @@ export class DashboardComponent {
 	startSimulation() {
 		this._http.get("/api/start")
 			.map(res => res.json())
-			.subscribe(seq =>  seq);
+			.subscribe(
+				err => {
+					console.log("Error:" + err);
+				},
+				()=> {
+					console.log("startSimulation success");
+				});
 	}
 }
