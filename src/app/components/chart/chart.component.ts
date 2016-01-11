@@ -107,7 +107,6 @@ export class ChartComponent {
         // put data directly onto the controller
         ChartComponent.http = http;
         this.getGridData();
-        this.columnDefs[0].cellFocused = true;
     }
 
     cellValueChanged = (event) => {
