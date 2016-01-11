@@ -14,14 +14,11 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
                     <button (click)="addNewGridItem()" type="button" title="Add a new task">
                         <img src="../../resources/images/plus.svg" width="12" height="12"/>
                     </button>
-                    <button (click)="sizeToFit()" type="button" title="Size columns to fit">
-                        <img src="../../resources/images/resize.png" width="12" height="12"/>
-                    </button>
                     <div class="dropdown">
                         <button (click)="displayGridMenu()" type="button" title="Display menu"/>
                             <img src="../../resources/images/menu.svg" width="12" height="12"/>
                         </button>
-                        <div id="gridMenuDropdown" class="dropdown-content" width="36">
+                        <div id="gridMenuDropdown" class="dropdown-content" width="30">
                             <table>
                                 <tr>
                                     <td style="padding-right:20px">
@@ -37,6 +34,15 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
                                             <input id="enableColumnResizeCheckbox" type="checkbox" (change)="gridOptions.enableColResize=$event.target.checked" />
                                             Enable column re-size
                                         </label>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding-right: 20px">
+                                        Columns size to fit
+                                        <button (click)="sizeToFit()" type="button" title="Size columns to fit" title="Size to fit">
+                                            <img src="../../resources/images/resize.png" width="10" height="10"/>
+                                        </button>
                                     </td>
                                 </tr>
                             </table>
