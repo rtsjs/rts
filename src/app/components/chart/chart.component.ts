@@ -107,6 +107,7 @@ export class ChartComponent {
         // put data directly onto the controller
         ChartComponent.http = http;
         this.getGridData();
+        this.columnDefs[0].cellFocused = true;
     }
 
     cellValueChanged = (event) => {
@@ -201,9 +202,9 @@ export class ChartComponent {
     }
 
     addNewGridItem() {
-        this.addGridItem("(Double-click to edit name)",
-            "(Double-click to edit period)",
-            "(Double-click to edit time)");
+        this.addGridItem("(click to edit name)",
+            "(click to edit period)",
+            "(click to edit time)");
     }
 
     addGridItem(name:string, period:string, executionTime:string) {
@@ -215,7 +216,6 @@ export class ChartComponent {
         ChartComponent.http.post("/api/task", JSON.stringify({id:id,name:name,period:period,executionTime:executionTime}),{headers:headers})
             .map(res => res.json())
             .subscribe(
-                data => this.rowData = data,
                 err => {
                         console.log("Error:" + err);
                 },
@@ -235,7 +235,6 @@ ChartComponent.prototype.deleteItem = function(params) {
         {headers:headers})
         .map(res => res.json())
         .subscribe(
-            seq => this.rowData = seq.tasks,
             err => {
                 console.log("Error:" + err);
             },
@@ -258,7 +257,6 @@ ChartComponent.prototype.refreshItem = function(params) {
         }), {headers: headers})
         .map(res => res.json())
         .subscribe(
-            seq => this.rowData = seq.tasks,
             err => {
                 console.log("Error:" + err);
             },
