@@ -77,12 +77,14 @@ export class ChartComponent {
             pinnedColumnCount: 0,
             rowSelection: 'none',
             onModelUpdated: this.modelUpdated,
+            onCellValueChanged: this.cellValueChanged,
             onReady: this.readyFunc,
             rowData: null,
             sizeToFit: true,
             enableSorting: false,
             enableColResize: false,
-            suppressCellSelection: true
+            suppressCellSelection: true,
+            singleClickEdit: true
         };
 
         // put columnDefs directly onto the controller
@@ -105,6 +107,11 @@ export class ChartComponent {
         // put data directly onto the controller
         ChartComponent.http = http;
         this.getGridData();
+    }
+
+    cellValueChanged = (event) => {
+        if (event.oldValue == event.newValue)
+            return;
     }
 
     modelUpdated = (event) => {
