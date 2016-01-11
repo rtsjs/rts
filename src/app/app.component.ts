@@ -11,7 +11,7 @@ import {ChartComponent} from './components/chart/chart.component';
     <a [router-link]="['./PriorityQueue']">PriorityQueue</a>
     <a [router-link]="['./Dashboard']">Dashboard</a>
     <a [router-link]="['./Characters']">Characters</a>
-    <a [router-link]="['./Chart']">Chart</a>
+    <a [router-link]="['./Chart']">Tasks</a>
     <router-outlet></router-outlet>
     `,
   directives: [ROUTER_DIRECTIVES]

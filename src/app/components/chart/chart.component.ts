@@ -8,7 +8,7 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
 @View({
     template: `
         <table>
-            <tr><h3>AG Grid</h3></tr>
+            <tr><h3>Tasks</h3></tr>
             <tr>
                 <td align="right" vertical-align="middle">
                     <button (click)="addNewGridItem()" type="button" title="Add a new task">
@@ -64,40 +64,31 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
 })
 
 export class ChartComponent {
-    public static rowIndex:number = 0;
-    public static isDirty:boolean = false;
+    public static http:Http;
     public columnDefs:Array<any>;
     public gridOptions:any;
     public rowData:Array<any>;
-    public selectedGridItem:any;
-    public previousSelectedGridItem:any;
-    private _http:Http;
 
     constructor(public http:Http){
-
         this.gridOptions = {
             pinnedColumnCount: 0,
-            rowSelection: 'single',
-            onRowSelected: this.rowSelectedFunc,
-            onRowDeselected: this.rowDeselectedFunc,
-            onCellValueChanged: this.cellValueChangedFunc,
-            onCellClicked: this.cellClickedFunc,
+            rowSelection: 'none',
+            onModelUpdated: this.modelUpdated,
             onReady: this.readyFunc,
             rowData: null,
             sizeToFit: true,
             enableSorting: false,
             enableColResize: false,
             suppressCellSelection: true
-            //,angularCompileRows: true
         };
 
         // put columnDefs directly onto the controller
         this.columnDefs = [
-            {headerName: "...", width: 30, checkboxSelection: true, suppressSorting: true, suppressMenu: true, suppressSizeToFit: true },
+            //{headerName: "...", width: 30, checkboxSelection: true, suppressSorting: true, suppressMenu: true, suppressSizeToFit: true },
             {headerName: "Name", minWidth: 100, field: "name", editable:true, padding: 10, headerTooltip:"Task name", cellStyle: {color: '#000000'}},
             {headerName: "Period", minWidth: 100, field: "period", editable:true, padding: 10,  headerTooltip:"Task period", cellStyle: {color: '#000000'}},
             {headerName: "Time", minWidth: 100, field: "executionTime", editable:true, padding: 10,  headerTooltip:"Task execution time", cellStyle: {color: '#000000'}},
-            {headerName: "...", width: 35, minWidth: 35, suppressSorting: true, suppressMenu: true, suppressSizeToFit: false, editable:false, cellRenderer: this.deleteTaskRendererFunc, filterParams:{cellRenderer: this.deleteTaskRendererFunc}}
+            {headerName: "...", width: 60, minWidth: 60, suppressSorting: true, suppressMenu: true, suppressSizeToFit: false, editable:false, cellRenderer: this.commandsTaskRendererFunc}
         ];
 
         /*
@@ -109,53 +100,57 @@ export class ChartComponent {
          */
 
         // put data directly onto the controller
-        this._http = http;
+        ChartComponent.http = http;
         this.getGridData();
     }
 
-    cellValueChangedFunc = (event)=> {
-        if (event.oldValue === event.newValue)
-            return;
-
-        ChartComponent.isDirty = true;
-        //this.updateGridItem();
-    }
-
-    cellClickedFunc = ($event)=> {
-        console.log('onCellClicked: ' + $event.rowIndex + ' ' + $event.colDef.field);
-
-        // the binding does not work? so I have to do this
-        if ($event.colDef.field == undefined){ // clicked on delete
-            this.deleteGridItem();
-            return;
-        }else {
-            if (ChartComponent.rowIndex != $event.rowIndex) {
-                if (ChartComponent.isDirty) {
-                    this.updateGridItem();
-                    ChartComponent.isDirty = false;
-                }
-            }
-
-            ChartComponent.rowIndex = $event.rowIndex;
-        }
+    modelUpdated = (event) => {
     }
 
     readyFunc = (event)=> {
         this.loadGridSettings();
     }
 
-    rowSelectedFunc = (event)=> {
-        this.selectedGridItem = event.node.data;
-    }
+    commandsTaskRendererFunc(params) {
+        var imageRefresh = document.createElement("img");
+        imageRefresh.setAttribute("src", "../../resources/images/loop-circular.svg");
+        imageRefresh.style.width = "12px";
+        imageRefresh.style.height = "12px";
+        imageRefresh.style.align = "middle";
 
-    rowDeselectedFunc = (event)=> {
-        this.previousSelectedGridItem = this.selectedGridItem;
-    }
+        var buttonRefresh = document.createElement("button");
+        buttonRefresh.style.width = 14;
+        buttonRefresh.style.height = 14;
+        buttonRefresh.style.align = "middle";
+        buttonRefresh.style.title = "Refresh";
+        buttonRefresh.appendChild(imageRefresh);
+        buttonRefresh.addEventListener('click', function() {
+            ChartComponent.prototype.refreshItem(params);
+        });
 
-    deleteTaskRendererFunc(params) {
-        return '<button width="14" height="14" align="middle" title="Delete task" (click)="this.deleteGridItem()">' +
-                    '<img src="../../resources/images/trash.png" width="12" height="12"/>' +
-                '</button>';
+        var imageDelete = document.createElement("img");
+        imageDelete.setAttribute("src", "../../resources/images/trash.png");
+        imageDelete.style.width = "12px";
+        imageDelete.style.height = "12px";
+        imageDelete.style.align = "middle";
+
+        var buttonDelete = document.createElement("button");
+        buttonDelete.style.width = 14;
+        buttonDelete.style.height = 14;
+        buttonDelete.style.align = "middle";
+        buttonDelete.style.title = "Delete task";
+        buttonDelete.appendChild(imageDelete);
+        buttonDelete.addEventListener('click', function() {
+            ChartComponent.prototype.deleteItem(params);
+        });
+
+        var parentElement = document.createElement("table");
+        var row = parentElement.insertRow(0);
+        var cellRefresh = row.insertCell(0);
+        cellRefresh.appendChild(buttonRefresh);
+        var cellDelete = row.insertCell(1);
+        cellDelete.appendChild(buttonDelete);
+        return parentElement;
     }
 
     displayGridMenu() {
@@ -190,7 +185,7 @@ export class ChartComponent {
     }
 
     getGridData() {
-        this._http.get("/api/task")
+        ChartComponent.http.get("/api/task")
             .map(res => res.json())
             .subscribe(seq =>  this.rowData = seq.tasks);
     }
@@ -207,7 +202,7 @@ export class ChartComponent {
         headers.append('Content-Type', 'application/json');
 
         var id = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
-        this._http.post("/api/task", JSON.stringify({id:id,name:name,period:period,executionTime:executionTime}),{headers:headers})
+        ChartComponent.http.post("/api/task", JSON.stringify({id:id,name:name,period:period,executionTime:executionTime}),{headers:headers})
             .map(res => res.json())
             .subscribe(
                 data => this.rowData = data,
@@ -218,59 +213,50 @@ export class ChartComponent {
                     console.log("addTask success");
                 });
     }
+};
 
-    updateGridItem(){
-        if (this.selectedGridItem == null) {
-            console.log("select a task");
-            return;
-        }
+ChartComponent.prototype.deleteItem = function(params) {
+    var data = params.data;
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
 
-        var headers = new Headers();
-        headers.append('Content-Type', 'application/json');
+    var deleteUrl = "/api/task/:" + data.id;
+    ChartComponent.http.delete(deleteUrl,
+        {headers:headers})
+        .map(res => res.json())
+        .subscribe(
+            seq => this.rowData = seq.tasks,
+            err => {
+                console.log("Error:" + err);
+            },
+            ()=> {
+                console.log("deleteTask success");
+            });
+};
 
-        var updateUrl = "/api/task/:" + this.selectedGridItem.id;
+ChartComponent.prototype.refreshItem = function(params) {
+    var data = params.data;
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
 
-        this._http.put(updateUrl, JSON.stringify({
-                id: this.selectedGridItem.id,
-                name: this.selectedGridItem.name,
-                period: this.selectedGridItem.period,
-                executionTime: this.selectedGridItem.executionTime
-            }), {headers: headers})
-            .map(res => res.json())
-            .subscribe(
-                seq => this.rowData = seq.tasks,
-                err => {
-                        console.log("Error:" + err);
-                },
-                ()=> {
-                        console.log("updateTask success");
-                });
-    }
-
-    deleteGridItem(){
-        if (this.selectedGridItem == null) {
-            console.log("select a task");
-            return;
-        }
-
-        var headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-
-        var deleteUrl = "/api/task/:" + this.selectedGridItem.id;
-        this._http.delete(deleteUrl,
-                        {headers:headers})
-            .map(res => res.json())
-            .subscribe(
-                seq => this.rowData = seq.tasks,
-                err => {
-                    console.log("Error:" + err);
-                },
-                ()=> {
-                    console.log("deleteTask success");
-                });
-    }
+    var updateUrl = "/api/task/:" + data.id;
+    ChartComponent.http.put(updateUrl, JSON.stringify({
+            id: data.id,
+            name: data.name,
+            period: data.period,
+            executionTime: data.executionTime
+        }), {headers: headers})
+        .map(res => res.json())
+        .subscribe(
+            seq => this.rowData = seq.tasks,
+            err => {
+                console.log("Error:" + err);
+            },
+            ()=> {
+                console.log("updateTask success");
+            });
 };
 
 function S4() {
     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-}
+};
