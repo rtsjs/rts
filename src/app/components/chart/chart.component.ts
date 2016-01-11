@@ -14,9 +14,6 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
                     <button (click)="addNewGridItem()" type="button" title="Add a new task">
                         <img src="../../resources/images/plus.svg" width="12" height="12"/>
                     </button>
-                    <button (click)="getGridData()" type="button" title="Refresh">
-                        <img src="../../resources/images/loop-circular.svg" width="12" height="12"/>
-                    </button>
                     <button (click)="sizeToFit()" type="button" title="Size columns to fit">
                         <img src="../../resources/images/resize.png" width="12" height="12"/>
                     </button>
