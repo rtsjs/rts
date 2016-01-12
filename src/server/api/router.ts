@@ -44,6 +44,14 @@ router.put("/task/:id", (req:any, res:any) => {
     });
 });
 
+router.patch("/task/:id", (req:any, res:any) => {
+    req.params.id = req.params.id.slice( 1 );
+    var tasks = new Tasks.Tasks();
+    tasks.updateTask(__dirname + '/inputTasks.json', req.body, function(data){
+        res.end("Success");
+    });
+})
+
 router.delete("/task/:id", (req:any, res:any) => {
     req.params.id = req.params.id.slice( 1 );
     var tasks = new Tasks.Tasks();

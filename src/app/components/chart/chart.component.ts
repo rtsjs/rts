@@ -248,7 +248,7 @@ ChartComponent.prototype.refreshItem = function(params) {
     headers.append('Content-Type', 'application/json');
 
     var updateUrl = "/api/task/:" + data.id;
-    ChartComponent.http.put(updateUrl, JSON.stringify({
+    ChartComponent.http.patch(updateUrl, JSON.stringify({
             id: data.id,
             name: data.name,
             period: data.period,
