@@ -222,33 +222,32 @@ export class ChartComponent {
                     console.log("addTask success");
                 });
     }
-};
 
-ChartComponent.prototype.deleteItem = function(params) {
-    var data = params.data;
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    deleteItem(params) {
+        var data = params.data;
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
 
-    var deleteUrl = "/api/task/:" + data.id;
-    ChartComponent.http.delete(deleteUrl,
-        {headers:headers})
-        .map(res => res.json())
-        .subscribe(
-            err => {
-                console.log("Error:" + err);
-            },
-            ()=> {
-                console.log("deleteTask success");
-            });
-};
+        var deleteUrl = "/api/task/:" + data.id;
+        ChartComponent.http.delete(deleteUrl,
+            {headers:headers})
+            .map(res => res.json())
+            .subscribe(
+                err => {
+                    console.log("Error:" + err);
+                },
+                ()=> {
+                    console.log("deleteTask success");
+                });
+    };
 
-ChartComponent.prototype.refreshItem = function(params) {
-    var data = params.data;
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    refreshItem(params) {
+        var data = params.data;
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
 
-    var updateUrl = "/api/task/:" + data.id;
-    ChartComponent.http.patch(updateUrl, JSON.stringify({
+        var updateUrl = "/api/task/:" + data.id;
+        ChartComponent.http.patch(updateUrl, JSON.stringify({
             id: data.id,
             name: data.name,
             period: data.period,
@@ -262,6 +261,7 @@ ChartComponent.prototype.refreshItem = function(params) {
             ()=> {
                 console.log("updateTask success");
             });
+    };
 };
 
 function S4() {
