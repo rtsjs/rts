@@ -1,205 +1,269 @@
 import {Component, NgFor, NgIf, View} from 'angular2/angular2';
 import {Router} from 'angular2/router';
-import {Http,  HTTP_BINDINGS} from 'angular2/http';
-
-//import {ag.grid.AgGridNg2} from 'ag-grid/dist/ag-grid';
+import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
+//import {AgGridNg2} from 'ag-grid/dist/ag-grid';
 
 @Component({ selector: 'my-chart' })
 
 @View({
     template: `
-		<h3>AG Grid</h3>
-		<ag-grid-ng2 id="tasks" class="ag-fresh"  style="height: 500px;"
-		[grid-options]="gridOptions"
-		[page-size]="pageSize"
-        [column-defs]="columnDefs"
-        [row-data]="rowData">
-      </ag-grid-ng2>
-      <br/>
-<button type="button" (click)="getGridData()">Refresh Grid</button>
-<button type="button" (click)="selectAll()">Select All</button>
-<button type="button" (click)="unSelectAll()">Un-Select All</button>
-<button type="button" (click)="addTask()">Add task</button>
-<button type="button" (click)="removeTask()">Remove task</button>
-<br />
-<br />
-    <div id="menu">
-        <ul>
-            <li>
-                <input type="checkbox" id="enableSorting" (click)="enableDisableSorting()" checked="true"><label for enableSorting>Enable/Disable Sorting</label>
-            </li>
-            <li>
-                <input type="checkbox"  id="enablePagination" (click)="enableDisablePagination()"><label for enablePagination>Enable/Disable Pagination</label>
-            </li>
-            <li>
-                <input type="checkbox"  id="enableFiltering" (click)="enableDisableFiltering()" checked="true"><label for enableFiltering>Enable/Disable Filtering</label>
-            </li>
-            <li>
-                <input type="checkbox"  id="suppressRowSelection" (click)="enableDisableRowSelection()"><label for suppressRowSelection>Enable/Disable Row Selection</label>
-            </li>
-            <li>
-                <input type="checkbox"  id="suppressCellSelection" (click)="enableDisableCellSelection()"><label for suppressCellSelection>Enable/Disable Cell Selection</label>
-            </li>
-            <li>
-                <input type="checkbox"  id="editableCells" (click)="enableDisableCellEdit()"><label for editableCells>Enable/Disable Cell Edit</label>
-            </li>
-        </ul>
-    </div>`,
-    directives: [ ag.grid.AgGridNg2, NgFor, NgIf],
-})
-export class ChartComponent {
-    public columnDefs:Array<any>;
-    public rowData:Array<any>;
-    public gridOptions:any;
-    public showToolPanel:boolean;
-    //public pageSize:any;
-    private _http:Http;
-    private sequence:any;
+        <table>
+            <tr><h3>Tasks</h3></tr>
+            <tr>
+                <td align="right" vertical-align="middle">
+                    <button (click)="addNewGridItem()" type="button" title="Add a new task">
+                        <img src="../../resources/images/plus.svg" width="12" height="12"/>
+                    </button>
+                    <div class="dropdown">
+                        <button (click)="displayGridMenu()" type="button" title="Display menu"/>
+                            <img src="../../resources/images/menu.svg" width="12" height="12"/>
+                        </button>
+                        <div id="gridMenuDropdown" class="dropdown-content" width="30">
+                            <table>
+                                <tr>
+                                    <td style="padding-right:20px">
+                                        <label>
+                                            <input id="enableSortingCheckbox" type="checkbox" (change)="gridOptions.enableSorting=$event.target.checked" />
+                                            Enable sorting
+                                        </label>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td style="padding-right: 20px">
+                                        <label>
+                                            <input id="enableColumnResizeCheckbox" type="checkbox" (change)="gridOptions.enableColResize=$event.target.checked" />
+                                            Enable column re-size
+                                        </label>
+                                    </td>
+                                </tr>
 
+                                <tr>
+                                    <td style="padding-right: 20px">
+                                        Columns size to fit
+                                        <button (click)="sizeToFit()" type="button" title="Size columns to fit" title="Size to fit">
+                                            <img src="../../resources/images/resize.png" width="10" height="10"/>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ag-grid-ng2 id="tasks" class="ag-fresh"  style="height: 500px;"
+                        [column-defs]="columnDefs"
+                        [row-data]="rowData"
+                        [grid-options]="gridOptions"
+                        [row-selection]="none"
+                        row-height="35">
+                    </ag-grid-ng2>
+                </td>
+            </tr>
+        </table>
+   `,
+    directives: [ag.grid.AgGridNg2]
+})
+
+export class ChartComponent {
+    public static http:Http;
+    public columnDefs:Array<any>;
+    public gridOptions:any;
+    public rowData:Array<any>;
 
     constructor(public http:Http){
+        this.gridOptions = {
+            pinnedColumnCount: 0,
+            rowSelection: 'none',
+            onModelUpdated: this.modelUpdated,
+            onCellValueChanged: this.cellValueChanged,
+            onReady: this.readyFunc,
+            rowData: null,
+            sizeToFit: true,
+            enableSorting: false,
+            enableColResize: false,
+            suppressCellSelection: true,
+            singleClickEdit: true
+        };
 
         // put columnDefs directly onto the controller
         this.columnDefs = [
-            {headerName: "Name", field: "name", headerTooltip:"Task Name", width: 250, editable:false, comparator: this.sortAlphaNumeric},
-            {headerName: "Period", field: "period", headerTooltip:"Task Period", width:150, editable:false, comparator: this.numberComparator, cellStyle: this.sizeCellStyle},
-            {headerName: "Time", field: "executionTime", headerTooltip:"Execution Time", width:150, editable:false, comparator: this.numberComparator}
+            //{headerName: "...", width: 30, checkboxSelection: true, suppressSorting: true, suppressMenu: true, suppressSizeToFit: true },
+            {headerName: "Name", minWidth: 100, field: "name", editable:true, padding: 10, headerTooltip:"Task name", cellStyle: {color: '#000000'}},
+            {headerName: "Period", minWidth: 100, field: "period", editable:true, padding: 10,  headerTooltip:"Task period", cellStyle: {color: '#000000'}},
+            {headerName: "Time", minWidth: 100, field: "executionTime", editable:true, padding: 10,  headerTooltip:"Task execution time", cellStyle: {color: '#000000'}},
+            {headerName: "...", width: 60, minWidth: 60, suppressSorting: true, suppressMenu: true, suppressSizeToFit: false, editable:false, cellRenderer: this.commandsTaskRendererFunc}
         ];
 
-        this.gridOptions =
-        {
-            rowSelection: 'single', //single, multiple
-            rowDeselection: true, //rows will be deselected if you hold down ctrl + click the row
-            //suppressCellSelection: true, // suppresses keyboard navigation as well
-            groupHeaders: false,
-            enableColResize: true,
-            suppressMenuHide: true,
-
-            enableSorting: true,
-            enableFilter: true,
-
-            singleClickEdit: true,
-
-            // events
-            onReady: this.ready,
-            onRowSelected: this.rowSelected,
-            onRowDeselected: this.rowDeselected,
-            onSelectionChanged: this.selectionChanged,
-            resize: this.resize,
-
-            //showToolPanel: true
-        }
-
-        //this.pageSize = 5;
+        /*
+         this.rowData = [
+         {name: "T1", period: "1", executionTime: 12},
+         {name: "T2", period: "2", executionTime: 13},
+         {name: "T3", period: "3", executionTime: 14}
+         ];
+         */
 
         // put data directly onto the controller
-        this._http = http;
+        ChartComponent.http = http;
         this.getGridData();
     }
 
-    ready(){
-        window.alert("grid is ready");
+    cellValueChanged = (event) => {
+        if (event.oldValue == event.newValue)
+            return;
     }
 
-    sizeCellStyle() {
-        return {'text-align': 'right', 'font-weight': 'bold', color: 'red'};
+    modelUpdated = (event) => {
     }
 
-
-    resize(){
-        this.refreshGrid();
-        // get the grid to space out it's columns
-        this.gridOptions.columnApi.sizeColumnsToFit(100);
-        this.refreshGrid();
+    readyFunc = (event)=> {
+        this.loadGridSettings();
     }
 
-    refreshGrid() {
-        // get the grid to refresh
-        this.gridOptions.api.refreshView();
-    }
+    commandsTaskRendererFunc(params) {
+        var imageRefresh = document.createElement("img");
+        imageRefresh.setAttribute("src", "../../resources/images/loop-circular.svg");
+        imageRefresh.style.width = "12px";
+        imageRefresh.style.height = "12px";
+        imageRefresh.style.align = "middle";
 
-    enableDisableCellEdit(){
-        // not working not sure why
-        this.columnDefs.forEach( (columnDef) =>{
-            //columnDef.editable = !columnDef.editable;
+        var buttonRefresh = document.createElement("button");
+        buttonRefresh.style.width = 14;
+        buttonRefresh.style.height = 14;
+        buttonRefresh.style.align = "middle";
+        buttonRefresh.style.title = "Refresh";
+        buttonRefresh.appendChild(imageRefresh);
+        buttonRefresh.addEventListener('click', function() {
+            ChartComponent.prototype.refreshItem(params);
         });
+
+        var imageDelete = document.createElement("img");
+        imageDelete.setAttribute("src", "../../resources/images/trash.png");
+        imageDelete.style.width = "12px";
+        imageDelete.style.height = "12px";
+        imageDelete.style.align = "middle";
+
+        var buttonDelete = document.createElement("button");
+        buttonDelete.style.width = 14;
+        buttonDelete.style.height = 14;
+        buttonDelete.style.align = "middle";
+        buttonDelete.style.title = "Delete task";
+        buttonDelete.appendChild(imageDelete);
+        buttonDelete.addEventListener('click', function() {
+            ChartComponent.prototype.deleteItem(params);
+        });
+
+        var parentElement = document.createElement("table");
+        var row = parentElement.insertRow(0);
+        var cellRefresh = row.insertCell(0);
+        cellRefresh.appendChild(buttonRefresh);
+        var cellDelete = row.insertCell(1);
+        cellDelete.appendChild(buttonDelete);
+        return parentElement;
     }
 
-    enableDisableCellSelection(){
-        this.gridOptions.suppressCellSelection = !this.gridOptions.suppressCellSelection;
+    displayGridMenu() {
+        var showDropdown = document.getElementById("gridMenuDropdown").classList.toggle("show");
+        if (showDropdown) {
+            this.loadGridSettings();
+        }else {
+            this.saveGridSettings();
+        }
     }
 
-    enableDisableRowSelection(){
-        this.gridOptions.suppressRowClickSelection = !this.gridOptions.suppressRowClickSelection;
+    sizeToFit(){
+        this.gridOptions.api.sizeColumnsToFit();
     }
 
-    enableDisableSorting(){
-        this.gridOptions.enableSorting = !this.gridOptions.enableSorting;
-        //this.gridOptions.api.RefreshHeader();
-        window.alert("not working and I am not sure why");
+    loadGridSettings(){
+        if (typeof(Storage) !== "undefined") {
+            this.gridOptions.enableSorting = (localStorage.getItem("enableSorting") === 'true');
+            document.getElementById("enableSortingCheckbox").checked = this.gridOptions.enableSorting;
+            this.gridOptions.enableColResize = (localStorage.getItem("enableColResize") === 'true');
+            document.getElementById("enableColumnResizeCheckbox").checked = this.gridOptions.enableColResize;
+            this.gridOptions.api.refreshHeader();
+        }
     }
 
-    enableDisablePagination(){
-        window.alert("not implemented yet");
+    saveGridSettings(){
+        if (typeof(Storage) !== "undefined") {
+            this.gridOptions.api.refreshHeader();
+            localStorage.setItem("enableSorting", this.gridOptions.enableSorting);
+            localStorage.setItem("enableColResize", this.gridOptions.enableColResize);
+        }
     }
 
-    enableDisableFiltering(){
-        this.gridOptions.enableFilter = !this.gridOptions.enableFilter;
-        //this.gridOptions.api.onFilterChanged();
-        this.refreshGrid();
-        window.alert("not working and I am not sure why");
-    }
-
-    selectAll(){
-        this.gridOptions.api.selectAll();
-    }
-
-    unSelectAll(){
-        this.gridOptions.api.deselectAll();
-    }
-
-    getGridData(){
-        this._http.get("http://localhost:5000/api/task")
+    getGridData() {
+        ChartComponent.http.get("/api/task")
             .map(res => res.json())
             .subscribe(seq =>  this.rowData = seq.tasks);
     }
 
-    numberComparator(number1:any, number2:any){
-        return number1 - number2;
+    addNewGridItem() {
+        this.addGridItem("(click to edit name)",
+            "(click to edit period)",
+            "(click to edit time)");
     }
 
-    sortAlphaNumeric(a:any, b:any){
-        var reA = /[^a-zA-Z]/g;
-        var reN = /[^0-9]/g;
-        var aA = a.replace(reA, "");
-        var bA = b.replace(reA, "");
-        if(aA === bA) {
-            var aN = parseInt(a.replace(reN, ""), 10);
-            var bN = parseInt(b.replace(reN, ""), 10);
-            return aN === bN ? 0 : aN > bN ? 1 : -1;
-        } else {
-            return aA > bA ? 1 : -1;
-        }
+    addGridItem(name:string, period:string, executionTime:string) {
+
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+
+        var id = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+        ChartComponent.http.post("/api/task", JSON.stringify({id:id,name:name,period:period,executionTime:executionTime}),{headers:headers})
+            .map(res => res.json())
+            .subscribe(
+                err => {
+                        console.log("Error:" + err);
+                },
+                ()=> {
+                    console.log("addTask success");
+                });
     }
 
-    addTask(){
-        window.alert("not implemented yet");
-    }
+    deleteItem(params) {
+        var data = params.data;
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
 
-    removeTask(){
-        window.alert("not implemented yet");
-    }
+        var deleteUrl = "/api/task/:" + data.id;
+        ChartComponent.http.delete(deleteUrl,
+            {headers:headers})
+            .map(res => res.json())
+            .subscribe(
+                err => {
+                    console.log("Error:" + err);
+                },
+                ()=> {
+                    console.log("deleteTask success");
+                });
+    };
 
-    rowDeselected(event:any) {
-        window.alert("row " + event.node.data.name + " de-selected");
-    }
+    refreshItem(params) {
+        var data = params.data;
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
 
-    rowSelected(event:any) {
-        window.alert("row " + event.node.data.name + " selected");
-    }
+        var updateUrl = "/api/task/:" + data.id;
+        ChartComponent.http.patch(updateUrl, JSON.stringify({
+            id: data.id,
+            name: data.name,
+            period: data.period,
+            executionTime: data.executionTime
+        }), {headers: headers})
+        .map(res => res.json())
+        .subscribe(
+            err => {
+                console.log("Error:" + err);
+            },
+            ()=> {
+                console.log("updateTask success");
+            });
+    };
+};
 
-    selectionChanged(event:any) {
-        window.alert('selection changed, ' + event.selectedRows.length + ' rows selected');
-    }
-}
-
+function S4() {
+    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+};

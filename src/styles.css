@@ -1,13 +1,74 @@
 h2 { color: #444; font-weight: lighter; }
 body { margin: 2em; }
 body, input[text], button { color: #888; font-family: Cambria, Georgia; }
-button {padding: 0.2em; font-size: 14px}
+button {padding: 0.2em; font-size: 14px;}
 
-#menu ul{
-    list-style: none;
-    margin: 0;
-    padding: 0;
+#delete {
+    width: 70em;  height: 20em;
 }
-#menu li{
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #ffffff;
+    padding: 16px;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #3e8e41;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
     display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    margin-left: 30px;
+    margin-bottom: 30px;
+    text-align: left;
+    position: absolute;
+    background-color: #f9f9f9;
+    width: 350px;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
+.menubtn{
+    border: 1px solid #ddd;
+    background-color: #f0f0f0;
+    padding: 4px 12px;
+
+    -o-transition: background-color .2s ease-in;
+    -moz-transition: background-color .2s ease-in;
+    -webkit-transition: background-color .2s ease-in;
+    transition: background-color .2s ease-in;
+}
+
+.menubtn:hover {
+    background-color: #e5e5e5;
+}
+
+.menubtn:active {
+    background-color: #ccc;
 }
