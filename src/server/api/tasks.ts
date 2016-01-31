@@ -45,7 +45,7 @@ export class Tasks {
                     console.log(err);
                     return cb(err);
                 }
-                cb("success");
+                cb(data);
             });
         });
     }
@@ -78,7 +78,7 @@ export class Tasks {
                 if(err){
                     return cb(err);
                 }
-                cb("success");
+                cb(data);
             });
         });
     }
@@ -117,7 +117,7 @@ export class Tasks {
                 if(err){
                     return cb(err);
                 }
-                cb("success");
+                cb(data);
             });
         });
     }

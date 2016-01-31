@@ -1,7 +1,7 @@
-import {Simulation} from "./simulation";
 'use strict';
 import express = require('express');
 import Tasks = require('./Tasks');
+import {Simulation} from "./simulation";
 
 var router = express.Router();
 
@@ -16,7 +16,6 @@ router.get("/start", (req:any, res:any) => {
 });
 
 router.get("/task", (req:any, res:any) => {
-
     var tasks = new Tasks.Tasks();
     tasks.getTasks(__dirname + '/inputTasks.json', function(data) {
         res.send(data);
@@ -31,8 +30,7 @@ router.get("/task/:id", (req:any, res:any) => {
 router.post("/task", (req:any, res:any) => {
     var tasks = new Tasks.Tasks();
     tasks.addTask(__dirname + '/inputTasks.json', req.body, function(data){
-        console.log("task added");
-        res.end("Success");
+        res.send(data);
     });
 });
 
@@ -40,7 +38,7 @@ router.put("/task/:id", (req:any, res:any) => {
     req.params.id = req.params.id.slice( 1 );
     var tasks = new Tasks.Tasks();
     tasks.updateTask(__dirname + '/inputTasks.json', req.body, function(data){
-        res.end("Success");
+        res.send(data);
     });
 });
 
@@ -48,7 +46,7 @@ router.patch("/task/:id", (req:any, res:any) => {
     req.params.id = req.params.id.slice( 1 );
     var tasks = new Tasks.Tasks();
     tasks.updateTask(__dirname + '/inputTasks.json', req.body, function(data){
-        res.end("Success");
+        res.send(data);
     });
 })
 
@@ -56,7 +54,7 @@ router.delete("/task/:id", (req:any, res:any) => {
     req.params.id = req.params.id.slice( 1 );
     var tasks = new Tasks.Tasks();
     tasks.deleteTask(__dirname + '/inputTasks.json', req.params.id, function(data){
-        res.end("Success");
+        res.send(data);
     });
 });
 

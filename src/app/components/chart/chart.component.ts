@@ -15,22 +15,22 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
                         <img src="../../resources/images/plus.svg" width="12" height="12"/>
                     </button>
                     <div class="dropdown">
-                        <button (click)="displayGridMenu()" type="button" title="Display menu"/>
-                            <img src="../../resources/images/menu.svg" width="12" height="12"/>
+                        <button id="displayMenu" (click)="displayGridMenu()" type="button" title="Display menu"/>
+                            <img id="displayMenuImg" src="../../resources/images/menu.svg" width="12" height="12"/>
                         </button>
                         <div id="gridMenuDropdown" class="dropdown-content" width="30">
                             <table>
                                 <tr>
-                                    <td style="padding-right:20px">
-                                        <label>
+                                    <td style="padding-right:25px">
+                                        <label style="color:#000000">
                                             <input id="enableSortingCheckbox" type="checkbox" (change)="gridOptions.enableSorting=$event.target.checked" />
                                             Enable sorting
                                         </label>
                                     </td>
                                  </tr>
                                  <tr>
-                                    <td style="padding-right: 20px">
-                                        <label>
+                                    <td style="padding-right: 25px">
+                                        <label style="color:#000000">
                                             <input id="enableColumnResizeCheckbox" type="checkbox" (change)="gridOptions.enableColResize=$event.target.checked" />
                                             Enable column re-size
                                         </label>
@@ -38,11 +38,11 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
                                 </tr>
 
                                 <tr>
-                                    <td style="padding-right: 20px">
-                                        Columns size to fit
+                                    <td style="padding-right: 25px">
                                         <button (click)="sizeToFit()" type="button" title="Size columns to fit" title="Size to fit">
                                             <img src="../../resources/images/resize.png" width="10" height="10"/>
                                         </button>
+                                        <label style="color:#000000">Columns size to fit</label>
                                     </td>
                                 </tr>
                             </table>
@@ -68,11 +68,13 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
 
 export class ChartComponent {
     public static http:Http;
+    public static showDropDown:boolean;
     public columnDefs:Array<any>;
     public gridOptions:any;
     public rowData:Array<any>;
 
     constructor(public http:Http){
+        ChartComponent.showDropDown = false;
         this.gridOptions = {
             pinnedColumnCount: 0,
             rowSelection: 'none',
@@ -135,7 +137,7 @@ export class ChartComponent {
         buttonRefresh.style.title = "Refresh";
         buttonRefresh.appendChild(imageRefresh);
         buttonRefresh.addEventListener('click', function() {
-            ChartComponent.prototype.refreshItem(params);
+            ChartComponent.prototype.refreshGridItem(params);
         });
 
         var imageDelete = document.createElement("img");
@@ -151,7 +153,7 @@ export class ChartComponent {
         buttonDelete.style.title = "Delete task";
         buttonDelete.appendChild(imageDelete);
         buttonDelete.addEventListener('click', function() {
-            ChartComponent.prototype.deleteItem(params);
+            ChartComponent.prototype.deleteGridItem(params);
         });
 
         var parentElement = document.createElement("table");
@@ -167,7 +169,9 @@ export class ChartComponent {
         var showDropdown = document.getElementById("gridMenuDropdown").classList.toggle("show");
         if (showDropdown) {
             this.loadGridSettings();
+            ChartComponent.showDropDown = true;
         }else {
+            ChartComponent.showDropDown = false;
             this.saveGridSettings();
         }
     }
@@ -207,7 +211,6 @@ export class ChartComponent {
     }
 
     addGridItem(name:string, period:string, executionTime:string) {
-
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
@@ -215,39 +218,34 @@ export class ChartComponent {
         ChartComponent.http.post("/api/task", JSON.stringify({id:id,name:name,period:period,executionTime:executionTime}),{headers:headers})
             .map(res => res.json())
             .subscribe(
-                err => {
-                        console.log("Error:" + err);
+                seq =>  {
+                    this.rowData = seq.tasks;
+                    console.log(this.rowData);
                 },
-                ()=> {
-                    console.log("addTask success");
-                });
-    }
-
-    deleteItem(params) {
-        var data = params.data;
-        var headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-
-        var deleteUrl = "/api/task/:" + data.id;
-        ChartComponent.http.delete(deleteUrl,
-            {headers:headers})
-            .map(res => res.json())
-            .subscribe(
                 err => {
                     console.log("Error:" + err);
                 },
                 ()=> {
-                    console.log("deleteTask success");
+                    this.refreshGrid();
+                    console.log("add grid item success");
                 });
-    };
 
-    refreshItem(params) {
-        var data = params.data;
-        var headers = new Headers();
-        headers.append('Content-Type', 'application/json');
+        this.refreshGrid();
+    }
 
-        var updateUrl = "/api/task/:" + data.id;
-        ChartComponent.http.patch(updateUrl, JSON.stringify({
+    refreshGrid() {
+        // get the grid to refresh
+        this.gridOptions.api.refreshView();
+    }
+};
+
+ChartComponent.prototype.refreshGridItem = function(params) {
+    var data = params.data;
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    var updateUrl = "/api/task/:" + data.id;
+    ChartComponent.http.patch(updateUrl, JSON.stringify({
             id: data.id,
             name: data.name,
             period: data.period,
@@ -255,14 +253,55 @@ export class ChartComponent {
         }), {headers: headers})
         .map(res => res.json())
         .subscribe(
+            seq => {
+                this.rowData = seq.tasks
+            },
+            err => {
+                console.log("Error:" + err.tasks);
+            },
+            ()=> {
+                console.log("refresh grid item success");
+            });
+}
+
+ChartComponent.prototype.deleteGridItem = function(params) {
+    var data = params.data;
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    var deleteUrl = "/api/task/:" + data.id;
+    ChartComponent.http.delete(deleteUrl,
+        {headers:headers})
+        .map(res => res.json())
+        .subscribe(
+            seq =>  {
+                this.rowData = seq.tasks
+            },
             err => {
                 console.log("Error:" + err);
             },
             ()=> {
-                console.log("updateTask success");
+                console.log("delete grid item success");
             });
-    };
-};
+}
+
+window.onclick = function(event){
+    event = event || window.event;
+    event = event.target || event.srcElement;
+    if (event.matches('.dropdown')) {
+        if (ChartComponent.showDropDown) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    alert("no match");
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+}
 
 function S4() {
     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);

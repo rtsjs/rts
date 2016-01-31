@@ -1,5 +1,5 @@
 import {View, Component} from 'angular2/angular2';
-import {RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
+import {Router, RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 import {CharactersComponent} from './components/character/characters.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {PriorityQueueComponent} from './components/priorityqueue/priorityqueue.component';
