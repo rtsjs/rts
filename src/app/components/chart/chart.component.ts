@@ -11,6 +11,7 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
             <tr><h3>Tasks</h3></tr>
             <tr>
                 <td align="right" vertical-align="middle">
+                    <button (click)="startSimulation()">Start Simulation</button>
                     <button (click)="addNewGridItem()" type="button" title="Add a new task">
                         <img src="../../resources/images/plus.svg" width="12" height="12"/>
                     </button>
@@ -63,7 +64,7 @@ import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
             </tr>
         </table>
    `,
-    directives: [ag.grid.AgGridNg2]
+    directives: [(<any>window).ag.grid.AgGridNg2]
 })
 
 export class ChartComponent {
@@ -117,9 +118,12 @@ export class ChartComponent {
     }
 
     modelUpdated = (event) => {
+        console.log("model updated");
+        this.refreshGrid();
     }
 
     readyFunc = (event)=> {
+        console.log("grid ready");
         this.loadGridSettings();
     }
 
@@ -198,7 +202,7 @@ export class ChartComponent {
         }
     }
 
-    getGridData() {
+    getGridData = function() {
         ChartComponent.http.get("/api/task")
             .map(res => res.json())
             .subscribe(seq =>  this.rowData = seq.tasks);
@@ -211,6 +215,7 @@ export class ChartComponent {
     }
 
     addGridItem(name:string, period:string, executionTime:string) {
+        console.log("add");
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
@@ -219,23 +224,34 @@ export class ChartComponent {
             .map(res => res.json())
             .subscribe(
                 seq =>  {
+                    //console.log(seq.tasks.length);
                     this.rowData = seq.tasks;
-                    console.log(this.rowData);
+                    console.log("No Error");
                 },
                 err => {
                     console.log("Error:" + err);
                 },
                 ()=> {
-                    this.refreshGrid();
                     console.log("add grid item success");
+                    this.getGridData();
                 });
-
-        this.refreshGrid();
     }
 
     refreshGrid() {
         // get the grid to refresh
         this.gridOptions.api.refreshView();
+    }
+
+    startSimulation() {
+        ChartComponent.http.get("/api/start")
+            .map(res => res.json())
+            .subscribe(
+                err => {
+                    console.log("Error:" + err);
+                },
+                ()=> {
+                    console.log("startSimulation success");
+                });
     }
 };
 
@@ -275,6 +291,8 @@ ChartComponent.prototype.deleteGridItem = function(params) {
         .map(res => res.json())
         .subscribe(
             seq =>  {
+                console.log(seq.tasks.length);
+                console.log("delete");
                 this.rowData = seq.tasks
             },
             err => {
@@ -291,11 +309,9 @@ window.onclick = function(event){
     if (event.matches('.dropdown')) {
         if (ChartComponent.showDropDown) {
             var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
+            for (var i = 0; i < dropdowns.length; i++) {
                 var openDropdown = dropdowns[i];
                 if (openDropdown.classList.contains('show')) {
-                    alert("no match");
                     openDropdown.classList.remove('show');
                 }
             }
