@@ -112,22 +112,22 @@ export class ChartComponent {
         this.getGridData();
     }
 
-    cellValueChanged = (event) => {
+    cellValueChanged = (event:any) => {
         if (event.oldValue == event.newValue)
             return;
     }
 
-    modelUpdated = (event) => {
+    modelUpdated = (event:any) => {
         console.log("model updated");
         this.refreshGrid();
     }
 
-    readyFunc = (event)=> {
+    readyFunc = (event:any)=> {
         console.log("grid ready");
         this.loadGridSettings();
     }
 
-    commandsTaskRendererFunc(params) {
+    commandsTaskRendererFunc(params:any) {
         var imageRefresh = document.createElement("img");
         imageRefresh.setAttribute("src", "../../resources/images/loop-circular.svg");
         imageRefresh.style.width = "12px";
@@ -135,8 +135,8 @@ export class ChartComponent {
         imageRefresh.style.align = "middle";
 
         var buttonRefresh = document.createElement("button");
-        buttonRefresh.style.width = 14;
-        buttonRefresh.style.height = 14;
+        buttonRefresh.style.width = "14px";
+        buttonRefresh.style.height = "14px";
         buttonRefresh.style.align = "middle";
         buttonRefresh.style.title = "Refresh";
         buttonRefresh.appendChild(imageRefresh);
@@ -204,8 +204,8 @@ export class ChartComponent {
 
     getGridData = function() {
         ChartComponent.http.get("/api/task")
-            .map(res => res.json())
-            .subscribe(seq =>  this.rowData = seq.tasks);
+            .map((res:any) => res.json())
+            .subscribe((seq:any) =>  this.rowData = seq.tasks);
     }
 
     addNewGridItem() {
@@ -221,14 +221,14 @@ export class ChartComponent {
 
         var id = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
         ChartComponent.http.post("/api/task", JSON.stringify({id:id,name:name,period:period,executionTime:executionTime}),{headers:headers})
-            .map(res => res.json())
+            .map((res:any) => res.json())
             .subscribe(
-                seq =>  {
+                (seq:any) =>  {
                     //console.log(seq.tasks.length);
                     this.rowData = seq.tasks;
                     console.log("No Error");
                 },
-                err => {
+                (err:any) => {
                     console.log("Error:" + err);
                 },
                 ()=> {
@@ -244,9 +244,9 @@ export class ChartComponent {
 
     startSimulation() {
         ChartComponent.http.get("/api/start")
-            .map(res => res.json())
+            .map((res:any) => res.json())
             .subscribe(
-                err => {
+                (err:any) => {
                     console.log("Error:" + err);
                 },
                 ()=> {
@@ -255,7 +255,7 @@ export class ChartComponent {
     }
 };
 
-ChartComponent.prototype.refreshGridItem = function(params) {
+ChartComponent.prototype.refreshGridItem = function(params:any) {
     var data = params.data;
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
@@ -267,12 +267,12 @@ ChartComponent.prototype.refreshGridItem = function(params) {
             period: data.period,
             executionTime: data.executionTime
         }), {headers: headers})
-        .map(res => res.json())
+        .map((res:any) => res.json())
         .subscribe(
-            seq => {
+            (seq:any) => {
                 this.rowData = seq.tasks
             },
-            err => {
+            (err:any) => {
                 console.log("Error:" + err.tasks);
             },
             ()=> {
@@ -280,7 +280,7 @@ ChartComponent.prototype.refreshGridItem = function(params) {
             });
 }
 
-ChartComponent.prototype.deleteGridItem = function(params) {
+ChartComponent.prototype.deleteGridItem = function(params:any) {
     var data = params.data;
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
@@ -288,14 +288,14 @@ ChartComponent.prototype.deleteGridItem = function(params) {
     var deleteUrl = "/api/task/:" + data.id;
     ChartComponent.http.delete(deleteUrl,
         {headers:headers})
-        .map(res => res.json())
+        .map((res:any) => res.json())
         .subscribe(
-            seq =>  {
+            (seq:any) =>  {
                 console.log(seq.tasks.length);
                 console.log("delete");
                 this.rowData = seq.tasks
             },
-            err => {
+            (err:any) => {
                 console.log("Error:" + err);
             },
             ()=> {
@@ -303,7 +303,7 @@ ChartComponent.prototype.deleteGridItem = function(params) {
             });
 }
 
-window.onclick = function(event){
+window.onclick = function(event:any){
     event = event || window.event;
     event = event.target || event.srcElement;
     if (event.matches('.dropdown')) {
