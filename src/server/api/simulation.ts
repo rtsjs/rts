@@ -31,8 +31,10 @@ export class Simulation {
                 var name = result['name'];
                 var period = result['period'];
                 var duration = result['executionTime'];
-                var testTask = new TestTask.TestTask(name, duration);
-                scheduler.AddPeriodicTask(testTask, period);
+                if (!isNaN(period) && !isNaN(duration)){
+                    var testTask = new TestTask.TestTask(name, duration);
+                    scheduler.AddPeriodicTask(testTask, period);
+                }
             });
 
             scheduler.Run(100)
