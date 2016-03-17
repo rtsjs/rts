@@ -1,6 +1,7 @@
 import {Component, NgFor, NgIf, View} from 'angular2/angular2';
 import {Router} from 'angular2/router';
 import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
+
 //import {AgGridNg2} from 'ag-grid/dist/ag-grid';
 
 @Component({ selector: 'my-chart' })

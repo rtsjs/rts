@@ -40,7 +40,7 @@
     "gulp-task-listing": "^1.0.1",
     "gulp-typescript": "^2.9.2",
     "gulp-util": "^3.0.6",
-    "hypertimer":"^1.0.0",
+    "hypertimer": "^1.0.0",
     "karma": "^0.13.8",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^0.2.0",
@@ -64,6 +64,7 @@
     "log": "^1.4.0",
     "morgan": "^1.6.1",
     "serve-favicon": "^2.3.0",
+    "socket.io": "^1.4.5",
     "systemjs": "0.19.4"
   }
 }

@@ -4,11 +4,21 @@ import bodyParser = require('body-parser');
 import favicon = require('serve-favicon');
 import logger = require('morgan');
 import apiRouter = require("./api/router");
+import rtsIo = require("./api/io");
 
 var port = process.env.PORT || 8001;
 var app = express();
 var environment = process.env.NODE_ENV;
 
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+rtsIo.io = io;
+rtsIo.io.on('connection', function(socket){
+    console.log('a user connected');
+    socket.on('disconnect', function(){
+        console.log('user disconnected');
+    });
+});
 //import Log = require('./api/RTSLog')
 //import Scheduler = require('./lib/Scheduler')
 //import TestTask = require('./lib/TestTask')
@@ -66,7 +76,7 @@ switch (environment){
         break;
 }
 
-app.listen(port, function() {
+http.listen(port, function() {
     console.log('Express server listening on port ' + port);
     console.log('env = ' + app.get('env') +
         '\n__dirname = ' + __dirname  +

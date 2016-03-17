@@ -4,6 +4,7 @@
 'use strict';
 import fs = require('fs');
 import Log = require('../api/RTSLog')
+import RtsIo = require('../api/io')
 import Scheduler = require('../lib/Scheduler')
 import TestTask = require('../lib/TestTask')
 import HyperScheduler = require('../lib/HyperScheduler')
@@ -36,7 +37,7 @@ export class Simulation {
                     scheduler.AddPeriodicTask(testTask, period);
                 }
             });
-
+            RtsIo.io.emit('scheduler started', 100);
             scheduler.Run(100)
             setTimeout(()=>{
                 scheduler.Stop();

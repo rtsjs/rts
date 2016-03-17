@@ -7,7 +7,13 @@
     <script src="../node_modules/angular2/bundles/angular2.dev.js"></script>
     <script src="../node_modules/angular2/bundles/router.dev.js"></script>
     <script src="../node_modules/angular2/bundles/http.dev.js"></script>
-
+    <script src="../node_modules/socket.io-client/socket.io.js"></script>
+    <script>
+        var socket = io();
+        socket.on('Task data',function(msg){
+            console.log(msg);
+        })
+    </script>
     <!-- include ag-Grid javascript file -->
     <script src="../node_modules/ag-grid/dist/ag-grid.js"></script>
     <!-- include stylesheets for the grid -->
