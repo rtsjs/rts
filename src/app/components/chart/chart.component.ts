@@ -136,8 +136,8 @@ export class ChartComponent {
         imageRefresh.style.align = "middle";
 
         var buttonRefresh = document.createElement("button");
-        buttonRefresh.style.width = "14px";
-        buttonRefresh.style.height = "14px";
+        buttonRefresh.style.width = 14;
+        buttonRefresh.style.height = 14;
         buttonRefresh.style.align = "middle";
         buttonRefresh.style.title = "Refresh";
         buttonRefresh.appendChild(imageRefresh);
