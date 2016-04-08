@@ -20,9 +20,10 @@ export class TestTask {
             if (elapsed >= this.duration)
                 break;
         }
-        var msg = this.name + " started at: " + time0 + " ran for: " + elapsed;
-        console.log(msg);
-        Log.log.info(msg);
-        RtsIo.io.emit('Task data',msg);
+
+        var json = JSON.stringify({Task:this.name, Started:time0, Ran:elapsed}, null, 4);
+        console.log(json);
+        Log.log.info(json);
+        RtsIo.io.emit('Task data',json);
     }
 }
