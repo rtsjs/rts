@@ -3,6 +3,7 @@ import {Router} from 'angular2/router';
 import {Http, Response, Headers, HTTP_BINDINGS} from 'angular2/http';
 
 //import {AgGridNg2} from 'ag-grid/dist/ag-grid';
+declare var io: any;
 
 @Component({ selector: 'my-chart' })
 
@@ -74,6 +75,7 @@ export class ChartComponent {
     public columnDefs:Array<any>;
     public gridOptions:any;
     public rowData:Array<any>;
+    socket: any;
 
     constructor(public http:Http){
         ChartComponent.showDropDown = false;
@@ -90,6 +92,8 @@ export class ChartComponent {
             suppressCellSelection: true,
             singleClickEdit: true
         };
+
+        this.socket = io();
 
         // put columnDefs directly onto the controller
         this.columnDefs = [
@@ -209,6 +213,12 @@ export class ChartComponent {
             .subscribe((seq:any) =>  this.rowData = seq.tasks);
     }
 
+    receiveData(){
+        this.socket.on('Task data',function(msg){
+            console.log(msg);
+        })
+    }
+
     addNewGridItem() {
         this.addGridItem("(click to edit name)",
             "(click to edit period)",
@@ -252,6 +262,7 @@ export class ChartComponent {
                 },
                 ()=> {
                     console.log("startSimulation success");
+                    this.receiveData();
                 });
     }
 };
